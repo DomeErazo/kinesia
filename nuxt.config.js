@@ -41,15 +41,14 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
-    'cookie-universal-nuxt',
+    '@nuxtjs/axios'
   ],
   axios: {
     proxy: true
   },
   proxy: {
     '/api/': {
-      target: 'https://kinesia.herokuapp.com',
+      target: 'https://backmineria.herokuapp.com',
   
       pathRewrite: {'^/api/': ''},
       changeOrigin: true
