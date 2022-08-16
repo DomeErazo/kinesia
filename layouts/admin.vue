@@ -156,20 +156,20 @@ export default {
         {
           title: "Inicio",
           icon: "mdi-home-export-outline",
-          route: "/inicioAdmin/",
+          route: "/Administrador/inicio/",
           key: 1,
         },
         
         {
           title: "Empresas",
           icon: "mdi-home-edit",
-          route: "/empresas",
+          route: "/Administrador/empresas",
           key: 2,
         },
         {
           title: "Trabajadores",
           icon: "mdi-account-group-outline",
-          route: "/trabajadores",
+          route: "/Administrador/trabajadores",
           key: 3,
         },
         // {
@@ -212,9 +212,7 @@ export default {
 };
 </script>
 <style scoped>
-.nuxt-link-active {
 
-}
 .v-btn--icon.v-size--default .v-icon,
 .v-btn--fab.v-size--default .v-icon {
   color: #036eb4;

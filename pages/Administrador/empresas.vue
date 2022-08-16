@@ -190,10 +190,14 @@ export default {
         },
         {
           text: "Teléfono",
-          value: "carreras",
+          value: "telefono",
+        },
+              {
+          text: "Estado",
+          value: "estado",
         },
 
-        // { text: "Acciones", value: "actions", sortable: false },
+        { text: "Acciones", value: "actions", sortable: false },
       ],
       search: "",
       desserts: [],

@@ -1,133 +1,9 @@
 <template>
   <v-card>
     <v-responsive :aspect-ratio="16 / 9">
-      <h1 style="text-align: center; margin-bottom: 10px">
-        Ingreso de nuevo personal
-      </h1>
-      <img class="imagen" src="/empresa.svg" />
-      <div class="container">
-        <v-row align="center" justify="center">
-          <v-col cols="12" sm="15" md="8">
-            <v-card-text class="elevation-12" id="card-in">
-              <v-form ref="form" v-model="form">
-               <p>Por favor ingrese los datos del nuevo trabajador:</p>
-                <v-text-field
-                  ref="nombres"
-                  label="Nombres"
-                  outlined
-                  rounded
-                  v-model="nombres"
-                  type="text"
-                  color="primary"
-                >
-                </v-text-field>
-                 <v-text-field
-                  ref="apellidos"
-                  label="Apellidos"
-                  outlined
-                  rounded
-                  v-model="apellidos"
-                  type="text"
-                  color="primary"
-                >
-                </v-text-field>
-               <v-text-field
-                  ref="cedula"
-                  label="Cédula"
-                  outlined
-                  rounded
-                  v-model="cedula"
-                 :rules="[rules.ced]"
-                  counter
-                  maxlength="10"
-                  color="primary"
-                >
-                </v-text-field>
-  <v-text-field
-                  ref="telefono"
-                  label="Teléfono"
-                  outlined
-                  rounded
-                  v-model="telefono"
-               
-                  :rules="[rules.tel]"
-    counter
-                 
-                  color="primary"
-                >
-                </v-text-field>
-  <v-select
-                  :items="generos"
-                  label="Género"
-                  outlined
-                  rounded
-                  v-model="genero"
-                ></v-select>
+   
+      <img class="imagen" src="/ingresoDatos.svg" style="margin-top:30px" />
 
-                <v-text-field
-                  ref="correo"
-                  label="Correo electrónico"
-                  outlined
-                  rounded
-                  v-model="correo"
-                  type="email"
-                  :rules="[rules.email]"
-                  color="primary"
-                >
-                </v-text-field>
-              
-              </v-form>
-            </v-card-text>
-
-            <v-btn id="btn-ingreso" color="secondary" @click="agregarCarr">
-              Agregar Trabajador
-            </v-btn>
-          </v-col>
-        </v-row>
-        <!-- <v-row> -->
-          <!-- <v-col cols="12">
-            <v-chip class="ma-2" color="#6398E4" outlined>
-              <v-icon left> mdi-office-building </v-icon>
-              Si no encuentra la facultad requerida, ingrese una nueva
-              <v-switch
-                style="margin-left: 6px; padding-bottom: 15px"
-                v-model="ok"
-                color="#CCD5E2"
-                value="secondary"
-                hide-details
-              ></v-switch>
-            </v-chip>
-          </v-col> -->
-        <!-- </v-row> -->
-        <!-- <v-row align="center" justify="center">
-          <v-col cols="12" sm="15" md="8">
-            <v-card-text
-              class="elevation-12"
-              id="card-in"
-              :single-expand="singleExpand"
-              v-if="ok"
-            >
-              <v-form ref="form" v-model="form">
-                <p>Ingrese una facultad:</p>
-                <v-text-field
-                  ref="facultad"
-                  label="Facultad"
-                  outlined
-                  rounded
-                  v-model="nombref"
-                  :rules="[() => !!nombref || 'Campo obligatorio']"
-                  type="text"
-                  color="primary"
-                >
-                </v-text-field>
-              </v-form>
-              <v-btn id="btn-ingreso" color="secondary" @click="agregarFac">
-                Agregar
-              </v-btn>
-            </v-card-text>
-          </v-col>
-        </v-row> -->
-      </div>
 
       <v-layout align-start>
         <v-flex>
@@ -140,7 +16,7 @@
           >
             <template v-slot:top>
               <v-toolbar flat>
-                <v-toolbar-title>Lista de Trabajadores</v-toolbar-title>
+                <v-toolbar-title>Resultados</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
                 <v-text-field
@@ -178,6 +54,11 @@
 
                       <v-btn color="blue darken-1" text> Editar </v-btn>
                     </v-card-actions>
+                             <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="blue darken-1" text @click="iniciarEntrevista"> entrevista </v-btn>
+
+                    </v-card-actions>
                   </v-card>
                 </v-dialog>
               </v-toolbar>
@@ -195,7 +76,7 @@
 <script>
 import axios from "axios";
 export default {
-  layout: "admin",
+  layout: "entrevista",
 
   data() {
     return {
@@ -257,8 +138,8 @@ export default {
           value: "apellidos",
         },
         {
-          text: "Cédula",
-          value: "cedula",
+          text: "Fecha",
+          value: "fecha",
           sortable: true,
         },
         // {
@@ -266,31 +147,16 @@ export default {
         //   value: "fechaNacimiento",
         // },
         {
-          text: "Género",
-          value: "genero",
+          text: "Archivo",
+          value: "archivo",
         },
-        {
-          text: "Correo",
-          value: "correo",
-        },
-        {
-          text: "Teléfono",
-          value: "telefono",
-        },
-        // {
-        //   text: "Carrera",
-        //   value: "carrera",
-        // },
-
-        {
-          text: "Usuario",
-          value: "usuario",
-        },
+       
+         { text: "Acciones", value: "actions", sortable: false },
       ],
       search: "",
       desserts: [],
       editedIndex: -1,
-      cedula1:"",
+      cedula1: "",
       // editedItem: {
       //   departamentoProducto: "",
       //   impactoExterno: "",
@@ -307,16 +173,11 @@ export default {
     this.obtenerListaEst();
     this.obtenerFac();
     // this.campos();
-    
-    
   },
   computed: {
-    
     formTitle() {
       return this.editedIndex === -1 ? "Nuevo Registro" : "Editar Registro";
     },
-
-    
   },
 
   watch: {
@@ -330,15 +191,14 @@ export default {
       this.prueba.forEach((elementos) => {
         if (elementos.nombre === this.facul) {
           this.listaCarreras = elementos.carreras;
-          if(this.listaCarreras==null){
-            this.facul=null
-            
-          this.$cookies.remove("ROLE_ADMIN");
-          this.$notifier.showMessage({
-            content: `La facultad no tiene carreras ingresadas`,
-            color: "error",
-          });
-         
+          if (this.listaCarreras == null) {
+            this.facul = null;
+
+            this.$cookies.remove("ROLE_ADMIN");
+            this.$notifier.showMessage({
+              content: `La facultad no tiene carreras ingresadas`,
+              color: "error",
+            });
           }
         }
       });
@@ -346,6 +206,9 @@ export default {
   },
 
   methods: {
+    iniciarEntrevista(){
+window.location.href="/Entrevista/Entrevista"
+    },
     validar(cedula) {
       this.$cookies.set("cedula", cedula);
       //var cedula = document.getElementById("ced").value.trim();
@@ -527,10 +390,8 @@ export default {
 
         lis.forEach((facu) => {
           this.listaFacultades.push(`${facu.nombre}`);
-
         });
         this.prueba = res.data;
-        
       } catch (err) {
         console.log(err);
         if (err.response.status == 403) {
@@ -545,7 +406,6 @@ export default {
     },
 
     async obtenerListaEst() {
-    
       try {
         const res = await axios.get("api/estudiante", {
           headers: {
@@ -648,7 +508,6 @@ export default {
               content: "Estudiante añadido con éxito",
               color: "success",
             });
-        
         } catch (err) {
           console.log(err);
           if (
@@ -669,7 +528,7 @@ export default {
       }
     },
     async campos() {
-        let cedula1=this.$cookies.get('cedula');
+      let cedula1 = this.$cookies.get("cedula");
       try {
         const res = await this.$axios.get(
           `api/estudiante/buscar/${cedula1}`,
@@ -679,17 +538,15 @@ export default {
               authorization: "SGVUCE " + this.$cookies.get("ROLE_ADMIN"),
             },
           }
-          
         );
-   
-        console.log(res.data)
-             if(res.data==true){
-           this.$notifier.showMessage({
-              content: "Cédula o Correo Duplicados",
-              color: "warning",
-            });
+
+        console.log(res.data);
+        if (res.data == true) {
+          this.$notifier.showMessage({
+            content: "Cédula o Correo Duplicados",
+            color: "warning",
+          });
         }
-       
       } catch (err) {}
     },
   },
