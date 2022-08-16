@@ -3,8 +3,11 @@ export default async function ({
 }) {
   const { path } = route
   if( path.startsWith('/user') || path.startsWith('/')) {
-    if (!$cookies.get('dataClient')) { 
+    // if (!$cookies.get('dataClient')) { 
+    
       redirect('/login')
-    }
+    // }
+  }else if( path.startsWith('/')){
+    redirect('/login')
   }
 }

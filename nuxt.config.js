@@ -1,6 +1,10 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  server: {
+    port: process.env.PORT || 3000,
+    host: '0.0.0.0',
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - Kinesia',
@@ -27,7 +31,6 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/axios.js',
     '~/plugins/notifier.js',
   ],
 
@@ -51,7 +54,7 @@ export default {
   },
   proxy: {
     '/api/': {
-      target: 'https://backmineria1.herokuapp.com',
+      target: 'https://backmineria.herokuapp.com',
   
       pathRewrite: {'^/api/': ''},
       changeOrigin: true
@@ -70,8 +73,7 @@ export default {
       }
     }
   },
-  server: {
-  },
+
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
