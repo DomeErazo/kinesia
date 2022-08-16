@@ -51,9 +51,9 @@ export default {
   },
   proxy: {
     '/api/': {
-      target: 'https://backmineria1.herokuapp.com',
+      target: 'https://backmineria.herokuapp.com',
   
-      pathRewrite: {'^/api/': ''},
+      pathRewrite: {'^/api/login': ''},
       changeOrigin: true
     }
   },
