@@ -42,7 +42,7 @@
             </v-btn>
           </v-col>
         </v-row>
-        <v-row>
+        <!-- <v-row> -->
           <!-- <v-col cols="12">
             <v-chip class="ma-2" color="#6398E4" outlined>
               <v-icon left> mdi-office-building </v-icon>
@@ -56,7 +56,7 @@
               ></v-switch>
             </v-chip>
           </v-col> -->
-        </v-row>
+        <!-- </v-row> -->
         <!-- <v-row align="center" justify="center">
           <v-col cols="12" sm="15" md="8">
             <v-card-text
@@ -190,10 +190,14 @@ export default {
         },
         {
           text: "Teléfono",
-          value: "carreras",
+          value: "telefono",
+        },
+              {
+          text: "Estado",
+          value: "estado",
         },
 
-        // { text: "Acciones", value: "actions", sortable: false },
+        { text: "Acciones", value: "actions", sortable: false },
       ],
       search: "",
       desserts: [],

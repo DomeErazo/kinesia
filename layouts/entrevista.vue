@@ -154,22 +154,23 @@ export default {
       drawer: false,
       items: [
         {
-          title: "Inicio",
+          title: "Ingreso",
           icon: "mdi-home-export-outline",
-          route: "/Administrador/inicio/",
+          route: "/Entrevista/inicio/",
           key: 1,
         },
         
         {
-          title: "Empresas",
-          icon: "mdi-home-edit",
-          route: "/Administrador/empresas",
+          title: "Entrevista",
+          icon: "mdi-account-group-outline",
+          route: "/Entrevista/Entrevista",
+          disabled:true,
           key: 2,
         },
         {
-          title: "Trabajadores",
+          title: "Resultados",
           icon: "mdi-account-group-outline",
-          route: "/Administrador/trabajadores",
+          route: "/Entrevista/resultados",
           key: 3,
         },
         // {

@@ -18,7 +18,9 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-
+  router: {
+    middleware: 'auth'
+  },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
@@ -40,8 +42,21 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-   
+    // https://go.nuxtjs.dev/axios
+    '@nuxtjs/axios',
+    'cookie-universal-nuxt',
   ],
+  axios: {
+    proxy: true
+  },
+  proxy: {
+    '/api/': {
+      target: 'https://backmineria1.herokuapp.com',
+  
+      pathRewrite: {'^/api/': ''},
+      changeOrigin: true
+    }
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

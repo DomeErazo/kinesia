@@ -156,20 +156,20 @@ export default {
         {
           title: "Inicio",
           icon: "mdi-home-export-outline",
-          route: "/Administrador/inicio/",
+          route: "/AdministradorEmpresarial/inicio/",
           key: 1,
         },
         
         {
-          title: "Empresas",
-          icon: "mdi-home-edit",
-          route: "/Administrador/empresas",
+          title: "Trabajadores",
+          icon: "mdi-account-group-outline",
+          route: "/AdministradorEmpresarial/trabajadoresEmpr",
           key: 2,
         },
         {
-          title: "Trabajadores",
+          title: "Resultados",
           icon: "mdi-account-group-outline",
-          route: "/Administrador/trabajadores",
+          route: "/AdministradorEmpresarial/resultados",
           key: 3,
         },
         // {

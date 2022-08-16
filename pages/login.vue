@@ -86,36 +86,45 @@ export default {
     };
   },
   methods: {
-    async enviar() {
+ async enviar() { 
       try {
-        const respuesta = await this.$axios.post("api/sgv/login", {
-          username: this.username,
-          password: this.password,
-        });
-        console.log(respuesta);
-
-        let type = respuesta.data.maximo_role;
-
-        if (type === "ROLE_ADMIN") {
-          this.$router.push("/adminGlobal");
-          
-        } else if (type === "ROLE_USER") {
-          this.$router.push("/adminEmpr");
-       
+        const respuesta = await this.$axios.post("api/mineria/personaLista", {
+          nombreUsuario: this.usuario,
+          contrasena: this.contra
+        })
+        console.log(respuesta)
+        if (!respuesta.data && !respuesta.data.nombre) {
+          this.alert = true
+          this.usuario = ''
+          this.contra = ''
+  
         } else {
-          this.$router.push("/Entrevista");
+          this.$store.commit('session/logIn', respuesta.data)
+          this.alert = false
+          let type = respuesta.data.usuario.role
+
+          if(type === "admin"){
+            this.$router.push('/Administador/inicio')
+          }else if(type === "DEPARTAMENTO") {
+            this.$router.push('/AdministradorEmpresarial/inicio')
+          } else {
+            this.$router.push('/Entrevista/inicio')
+          }
+
           
+    
         }
       } catch (err) {
-        console.log(err);
-        if (err.response.status == 401) {
-          this.$notifier.showMessage({
-            content: "Datos incorrectos, por favor corrija para continuar",
-            color: "error",
+        console.log(err)
+        console.log("entro")
+         this.usuario = ''
+         this.contra = ''
+         this.$notifier.showMessage({
+            content: "Corrija los campos del formulario para continuar",
+            color: "success",
           });
-        }
       }
-    },
+    }
   },
 };
 </script>
