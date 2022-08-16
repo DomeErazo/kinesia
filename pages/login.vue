@@ -97,7 +97,7 @@ export default {
         let type = respuesta.data.maximo_role;
 
         if (type === "ROLE_ADMIN") {
-          this.$router.push("/adminGlobal");
+          this.$router.push("/inicioAdmin");
           
         } else if (type === "ROLE_USER") {
           this.$router.push("/adminEmpr");

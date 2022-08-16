@@ -32,8 +32,7 @@
 
         <br />
 
-        <img class="ministerio" src="/ministerioSalud.png" />
-        <img style="right " class="uce" src="/uce.jpeg" />
+        
       </v-card-text>
     </v-responsive>
   </v-card>
@@ -48,14 +47,7 @@ export default {
   margin-left: 40%;
   width: 60%;
 }
-.ministerio {
-  margin-left: 25%;
-  width: 15%;
-}
-.uce {
-  margin-left: 15%;
-  width: 20%;
-}
+
 .texto {
   text-align: justify;
   align-content: "center";

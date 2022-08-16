@@ -48,7 +48,7 @@ export default {
   },
   proxy: {
     '/api/': {
-      target: 'https://backmineria.herokuapp.com',
+      target: 'https://backmineria1.herokuapp.com',
   
       pathRewrite: {'^/api/': ''},
       changeOrigin: true
