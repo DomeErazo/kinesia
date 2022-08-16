@@ -6,6 +6,7 @@
       fixed
       app
     >
+    HOLA
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn
         icon
@@ -44,7 +45,7 @@
       :absolute="!fixed"
       app
     >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+     
     </v-footer>
   </v-app>
 </template>
