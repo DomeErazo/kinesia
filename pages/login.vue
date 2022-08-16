@@ -58,7 +58,7 @@
                           color="secondary"
                           elevation="13"
                           dark
-                          >Iniciar Sesión Prueba</v-btn
+                          >Prueba</v-btn
                         >
                       </div>
                     </v-card-text>
