@@ -58,7 +58,7 @@
                           color="secondary"
                           elevation="13"
                           dark
-                          >Prueba</v-btn
+                          >inicio</v-btn
                         >
                       </div>
                     </v-card-text>
