@@ -2,7 +2,7 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
   server: {
-    port: process.env.PORT || 3000,
+    port: process.env.PORT || 8080,
     host: '0.0.0.0',
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -22,9 +22,9 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-  router: {
-    middleware: 'auth'
-  },
+  // router: {
+  //   middleware: 'auth'
+  // },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
@@ -54,7 +54,7 @@ export default {
   },
   proxy: {
     '/api/': {
-      target: 'https://backmineria.herokuapp.com',
+      target: 'https://kinterviewbackmineria.herokuapp.com/mineria/',
   
       pathRewrite: {'^/api/': ''},
       changeOrigin: true

@@ -2,7 +2,7 @@
   <v-responsive>
     <v-app>
       <div>
-        <v-app-bar flat app color="#CCD5E2">
+        <v-app-bar flat app color="#336699">
           <v-app-bar-nav-icon
             dark
             v-if="!$vuetify.breakpoint.xs"
@@ -26,7 +26,7 @@
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn dark icon v-bind="attrs" v-on="on">
-                  <v-icon style="color: #036eb4"> mdi-account </v-icon>
+                  <v-icon style="color: #33CCFF"> mdi-account </v-icon>
                 </v-btn>
               </template>
               <v-list>
@@ -59,7 +59,7 @@
           v-if="!$vuetify.breakpoint.xs"
           v-model="drawer"
           :mini-variant.sync="mini"
-          color="#CCD5E2"
+          color="#336699"
           permanent
           dark
           app
@@ -68,28 +68,28 @@
           <v-list>
             <v-list-item
               v-for="item in items"
-              style="color: #036eb4"
+              style="color: #33CCFF"
               :key="item.key"
               :to="item.route"
               nuxt
               exact
             >
               <v-list-item-icon>
-                <v-icon style="color: #036eb4">{{ item.icon }}</v-icon>
+                <v-icon style="color: #33CCFF">{{ item.icon }}</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-title style="color: #036eb4">{{
+                <v-list-item-title style="color: #33CCFF">{{
                   item.title
                 }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item @click="logout">
               <v-list-item-icon>
-                <v-icon style="color: #036eb4">mdi-logout</v-icon>
+                <v-icon style="color: #33CCFF">mdi-logout</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title style="color: #036eb4"
+                <v-list-item-title style="color: #33CCFF"
                   >Salir</v-list-item-title
                 >
               </v-list-item-content>
@@ -216,6 +216,6 @@ export default {
 
 .v-btn--icon.v-size--default .v-icon,
 .v-btn--fab.v-size--default .v-icon {
-  color: #036eb4;
+  color: #33CCFF;
 }
 </style>

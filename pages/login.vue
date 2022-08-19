@@ -88,9 +88,9 @@ export default {
   methods: {
  async enviar() { 
       try {
-        const respuesta = await this.$axios.post("api/mineria/personaLista", {
-          nombreUsuario: this.usuario,
-          contrasena: this.contra
+        const respuesta = await this.$axios.post("/mineria/inseruser", {
+          usuario: this.usuario,
+          contrasena: this.contrasena
         })
         console.log(respuesta)
         if (!respuesta.data && !respuesta.data.nombre) {

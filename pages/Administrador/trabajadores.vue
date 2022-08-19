@@ -9,38 +9,28 @@
         <p style="font-weight: 600">
           
         </p>
-        <v-row align="center" justify="center">
-          <v-col cols="12" sm="15" md="8">
-            <v-autocomplete
-              :items="listaFacultades"
-              label="Empresas"
-              outlined
-              v-model="facul"
-              rounded
-            ></v-autocomplete>
-          </v-col>
-        </v-row>
+     
         <v-row align="center" justify="center">
           <v-col cols="12" sm="15" md="8" v-if="facul">
             <v-card-text class="elevation-12" id="card-in">
               <v-form ref="form" lazy-validation v-model="valid">
                 <p>Por favor ingrese los datos del nuevo trabajador:</p>
                 <v-text-field
-                  ref="nombres"
-                  label="Nombres"
+                  ref="nombre"
+                  label="nombre"
                   outlined
                   rounded
-                  v-model="nombres"
+                  v-model="nombre"
                   type="text"
                   color="primary"
                 >
                 </v-text-field>
                 <v-text-field
-                  ref="apellidos"
-                  label="Apellidos"
+                  ref="apellido"
+                  label="apellido"
                   outlined
                   rounded
-                  v-model="apellidos"
+                  v-model="apellido"
                   type="text"
                   color="primary"
                 >
@@ -175,17 +165,17 @@
                         <v-row>
                           <v-col cols="12" sm="6" md="6">
                             <v-text-field
-                              v-model="nombres"
-                              label="Nombres"
-                              :rules="[() => !!nombres || 'Campo obligatorio']"
+                              v-model="nombre"
+                              label="nombre"
+                              :rules="[() => !!nombre || 'Campo obligatorio']"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="6">
                             <v-text-field
-                              v-model="apellidos"
-                              label="Apellidos"
+                              v-model="apellido"
+                              label="apellido"
                               :rules="[
-                                () => !!apellidos || 'Campo obligatorio',
+                                () => !!apellido || 'Campo obligatorio',
                               ]"
                             ></v-text-field>
                           </v-col>
@@ -336,18 +326,16 @@ export default {
       },
 
       generos: ["Masculino", "Femenino"],
-      listaFacultades: [],
-      listaCarreras: [],
+
       cedula: "",
-      nombres: "",
-      apellidos: "",
-      fechaNacimiento: "", //localDate
+      nombre: "",
+      apellido: "",
+    listaEmpresas:[],
       correo: "",
       ced: [],
       usuario: "",
       telefono: "",
-      semestre: 0,
-      carrera: "",
+    
       genero: "",
 
       esControlador: false,
@@ -362,12 +350,12 @@ export default {
 
       headers: [
         {
-          text: "Nombres",
-          value: "nombres",
+          text: "nombre",
+          value: "nombre",
         },
         {
-          text: "Apellidos",
-          value: "apellidos",
+          text: "apellido",
+          value: "apellido",
         },
         {
           text: "Cédula",
@@ -390,18 +378,20 @@ export default {
           text: "Teléfono",
           value: "telefono",
         },
-        // {
-        //   text: "Carrera",
-        //   value: "carrera",
-        // },
+        {
+          text: "Empresa",
+          value: "empresa.nombreempresa",
+        },
 
         {
           text: "Usuario",
-          value: "usuario",
+          value: "usuario.usuario",
         },
       ],
       search: "",
-      desserts: [],
+      desserts: [
+      
+      ],
       editedIndex: -1,
       cedula1:"",
       // editedItem: {
@@ -417,8 +407,8 @@ export default {
     };
   },
   mounted() {
-    this.obtenerListaEst();
-    this.obtenerFac();
+    // this.obtenerListaEst();
+    this.obtenerAdminE();
     // this.campos();
     
     
@@ -594,6 +584,54 @@ export default {
         this.editedIndex = -1;
       });
     },
+    async obtenerAdminE() {
+     
+      try {
+        const res = await axios.get("/api/personaRol/adminE");
+       
+
+        const lis = res.data;
+        console.log(lis)
+
+        lis.forEach((facu) => {
+          this.listaEmpresas.push(`${facu.empresa.nombreempresa}`);
+        
+        });
+
+this.desserts=res.data;
+this.obtenerUsuario();
+       
+      //  this.llenarTabla();
+        
+      } catch (err) {
+        console.log(err);
+     
+      }
+    },
+       async obtenerUsuario() {
+     
+      try {
+        const res = await axios.get("/api/personaRol/adminE");
+       
+
+        const lis = res.data;
+       
+
+        lis.forEach((facu) => {
+          // this.desserts=facu.empresa;
+          console.log(facu.usuario.usuario)
+          this.desserts[usuario]=facu.usuario.nombre;
+        
+        });
+
+       
+      //  this.llenarTabla();
+        
+      } catch (err) {
+        console.log(err);
+     
+      }
+    },
 
     // guardarMod() {
     //   if (this.editedIndex > -1) {
@@ -626,90 +664,62 @@ export default {
     //   }
     // },
 
-    async obtenerFac() {
-      this.listaFacultades.slice();
-      try {
-        const res = await axios.get("api/facultad", {
-          headers: {
-            authorization: "SGVUCE " + this.$cookies.get("ROLE_ADMIN"),
-          },
-        });
-        // console.log(res);
-
-        const lis = res.data;
-
-        lis.forEach((facu) => {
-          this.listaFacultades.push(`${facu.nombre}`);
-
-        });
-        this.prueba = res.data;
-        
-      } catch (err) {
-        console.log(err);
-        if (err.response.status == 403) {
-          this.$cookies.remove("ROLE_ADMIN");
-          this.$notifier.showMessage({
-            content: `Su sesión ha expirado`,
-            color: "error",
-          });
-          this.$router.push("/login");
-        }
-      }
-    },
-
-    async obtenerListaEst() {
     
-      try {
-        const res = await axios.get("api/estudiante", {
-          headers: {
-            authorization: "SGVUCE " + this.$cookies.get("ROLE_ADMIN"),
-          },
-        });
 
-        this.desserts = res.data;
-        // this.ced=this.res.data.cedula;
-        const bus = res.data;
-        bus.forEach((element) => {
-          this.ced.push(`${element.cedula}`);
-        });
-        console.log(this.ced);
-      } catch (err) {
-        console.log(err);
-        if (err.response.status == 404) {
-          this.$notifier.showMessage({
-            content: `No hay estudiantes registrados`,
-            color: "error",
-          });
-        } else if (err.response.status == 403) {
-          this.$cookies.remove("ROLE_ADMIN");
-          this.$notifier.showMessage({
-            content: `Su sesión ha expirado`,
-            color: "error",
-          });
-          this.$router.push("/login");
-        }
-      }
-    },
+    // async obtenerListaEst() {
+    
+    //   try {
+    //     const res = await axios.get("api/estudiante", {
+    //       headers: {
+    //         authorization: "SGVUCE " + this.$cookies.get("ROLE_ADMIN"),
+    //       },
+    //     });
+
+    //     this.desserts = res.data;
+    //     // this.ced=this.res.data.cedula;
+    //     const bus = res.data;
+    //     bus.forEach((element) => {
+    //       this.ced.push(`${element.cedula}`);
+    //     });
+    //     console.log(this.ced);
+    //   } catch (err) {
+    //     console.log(err);
+    //     if (err.response.status == 404) {
+    //       this.$notifier.showMessage({
+    //         content: `No hay estudiantes registrados`,
+    //         color: "error",
+    //       });
+    //     } else if (err.response.status == 403) {
+    //       this.$cookies.remove("ROLE_ADMIN");
+    //       this.$notifier.showMessage({
+    //         content: `Su sesión ha expirado`,
+    //         color: "error",
+    //       });
+    //       this.$router.push("/login");
+    //     }
+    //   }
+    // },
 
     llenarTabla() {
       this.desserts.push({
-        nombres: this.nombres,
-        apellidos: this.apellidos,
-        cedula: this.cedula,
-        correo: this.correo,
-        fechaNacimiento: this.fechaNacimiento,
-        carrera: this.carrera,
-        usuario: this.usuario,
+        nombre: this.nombre,
+        apellido: this.apellido,
         telefono: this.telefono,
-        genero: this.genero,
+        cedula: this.cedula,
+        // correo: this.correo,
+        // fechaNacimiento: this.fechaNacimiento,
+        // carrera: this.carrera,
+        // usuario: this.usuario,
+        
+        // genero: this.genero,
       });
-      this.obtenerListaEst();
+   
     },
 
     async enviar() {
       if (
-        !this.nombres ||
-        !this.apellidos ||
+        !this.nombre ||
+        !this.apellido ||
         !this.fechaNacimiento ||
         !this.cedula ||
         !this.correo ||
@@ -727,8 +737,8 @@ export default {
           const res = await this.$axios.post(
             "api/estudiante",
             {
-              nombres: this.nombres.trim(),
-              apellidos: this.apellidos.trim(),
+              nombre: this.nombre.trim(),
+              apellido: this.apellido.trim(),
               fechaNacimiento: this.fechaNacimiento,
               cedula: this.cedula.trim(),
               correo: this.correo.trim(),
@@ -745,8 +755,8 @@ export default {
               },
             },
 
-            (this.nombres = ""),
-            (this.apellidos = ""),
+            (this.nombre = ""),
+            (this.apellido = ""),
             (this.fechaNacimiento = ""),
             (this.cedula = ""),
             (this.correo = ""),
@@ -769,7 +779,7 @@ export default {
             "Request processing failed; nested exception is java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1"
           ) {
             this.$notifier.showMessage({
-              content: "Debe ingresar dos apellidos",
+              content: "Debe ingresar dos apellido",
               color: "warning",
             });
           } else if (err.response.status == 500) {

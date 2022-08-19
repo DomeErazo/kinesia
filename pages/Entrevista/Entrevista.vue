@@ -1,8 +1,244 @@
 <template>
-    
+<div>
+  <v-row>
+    <p>Holi</p>
+  </v-row>
+  <!-- <v-row > -->
+    <!-- <v-col cols="6" sm="6" md="6" > -->
+  <v-card class="text-center">
+   
+    <v-card-text >
+       
+      <video id="video" playsinline autoplay style="width: 1px;" ref=“myvideo”></video>
+      <!-- <v-btn :disabled="isPlaying" @click="play">Play</v-btn>
+      <v-btn :disabled="!isPlaying" @click="stop">Stop</v-btn> -->
+      <!-- <v-btn class="primary mb-2" block id="cambiar-camara" @click="cambiarCamara()"><v-icon>mdi-camera-party-mode</v-icon>Cambiar camara</v-btn> -->
+      <canvas id="canvas" width="100" height="100" style="max-width: 100%;"></canvas>
+      <canvas v-show="false" id="otrocanvas" width="300" height="300" display:none></canvas>
+      <p class="text-h5 text-center black--text">
+        AlexNet AD - {{ prediction }}
+      </p>
+    </v-card-text>
+  </v-card>
+  <!-- </v-col> -->
+  <!-- </v-row> -->
+  </div>
 </template>
 <script>
+import * as tf from '@tensorflow/tfjs'
+import path from 'path';
 export default {
   layout: "entrevista",
+  data(){
+    return {
+      overlay: false,
+      	isPlaying: false,
+      value:[
+        1000,
+        213,
+      ],
+        facingMode: 'user',
+      tamano: 100,
+      currentStream: undefined,
+      video: undefined,
+      canvas: undefined,
+      otrocanvas: undefined,
+      ctx: undefined,
+      prediction: '-',
+      modelo: null,
+      category: null,
+      modelReady:false,
+      predictedValue:'Click on train',
+      valueToPredict:'',
+      
+    }
+  },
+  async mounted(){
+    // let that =this;
+    // async function loadModel(){
+    //   that.modelo=await tf.loadLayersModel("/modelo/model.json");
+    //   // that.modelReady=true;
+    //   // that.predictedValue='Ready for making predictions'
+    // }
+    // loadModel();
+   
+    await this.initModel()
+    this.mostrarCamara()
+  },
+  methods:{
+
+    async initModel(){
+      console.log("Cargando modelo...");
+      this.overlay=true
+      this.modelo=await tf.loadLayersModel("/modelo/model.json")
+        this.overlay = false
+      console.log("Modelo cargado", this.modelo);
+    },
+     procesarCamara() {
+      this.ctx.drawImage(this.video, 0, 0,100, 100, 0, 0, 100, 100);
+      setTimeout(this.procesarCamara, 20);
+    },
+    mostrarCamara() {
+      this.video = document.querySelector("#video")
+      this.canvas = document.querySelector("#canvas")
+      this.otrocanvas = document.querySelector("#otrocanvas")
+      this.ctx = this.canvas.getContext("2d")
+      const opciones = {
+        audio: false,
+        video: {
+          width: 100, height: 100
+        }
+      }
+
+      if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia(opciones)
+          .then(localMediaStream => {
+            this.currentStream = localMediaStream
+            this.video.srcObject = localMediaStream;
+            this.procesarCamara()
+            this.video.play();
+            this.predecir()
+          })
+          .catch(function(err) {
+            alert("No se pudo utilizar la camara :(");
+            alert(err);
+          })
+      } else {
+        alert("No existe la funcion getUserMedia");
+      }
+    },
+    predecir() {
+     
+      if (this.modelo != null) {
+        this.resamplesingle(this.canvas, 300, 300, this.otrocanvas);
+      }
+      setTimeout(this.predecir, 8000)
+        //Hacer la predicción
+
+        const ctx2 = this.otrocanvas.getContext("2d");
+        // const imageData=ctx2.drawImage(0,0,300,300)
+        const imgData = ctx2.getImageData(0,0, 1, 300);
+
+        let arr = [];
+        let arr300 = [];
+         for (let p=0; p < imgData.data.length; p++) {
+          const rojo = imgData.data[p] / 255;
+          const verde = imgData.data[p+1] / 255;
+          const azul = imgData.data[p+2] / 255;
+          const gris = (rojo+verde+azul)/3;
+
+          arr300.push([gris]);
+          if (arr300.length === 300) {
+            arr.push(arr300);
+            arr300 = [];
+          }
+        }
+
+      arr = [arr];
+
+      // const tensor = tf.tensor4d(arr);
+         const tfarray = tf.tensor4d(arr);
+      const resul = this.modelo.predict(tfarray).dataSync();
+      if( resul ==0){
+        this.prediction="Aceptación"
+      }else if(resul ==1){
+          this.prediction="Confianza"
+      }
+      else if(resul ==2){
+          this.prediction="Confundido"
+      }else if(resul ==3){
+          this.prediction="Inseguridad"
+      }else if(resul ==4){
+          this.prediction="Mentira"
+      }else if(resul ==5){
+          this.prediction="Nervioso"
+      }else if(resul ==6){
+          this.prediction="Verdad"
+      }
+      resul = 0 ? this.prediction ="Aceptación": this.prediction="Chao"
+      // prediction.print();
+      // return prediction.get(0,0);
+// console.log(tensor)
+      // const resultDenso = this.modelo.predict(tensor);
+      //resultDenso tiene el numerito
+      // resultDenso <= .5 ? this.pediction = "Gato" : this.pediction = "Perro"
+
+      
+      
+    },
+    // predictValue(inputs){
+    //   const tfarray = tf.tensor4d(arr);
+    //   const prediction = this.modelo.predcit(tfarray);
+    //   prediction.print();
+    //   return prediction.get(0,0);
+    // },
+ 
+    resamplesingle(canvas, width, height, resize_canvas) {
+      const width_source = canvas.width;
+      const height_source = canvas.height;
+      width = Math.round(width);
+      height = Math.round(height);
+      const ratio_w = width_source / width;
+      const ratio_h = height_source / height;
+      const ratio_w_half = Math.ceil(ratio_w / 2);
+      const ratio_h_half = Math.ceil(ratio_h / 2);
+
+      const ctx = canvas.getContext("2d");
+      const ctx2 = resize_canvas.getContext("2d");
+      const img = ctx.getImageData(0, 0, width_source, height_source);
+      const img2 = ctx2.createImageData(width, height);
+      const data = img.data;
+      const data2 = img2.data;
+
+      for (let j = 0; j < height; j++) {
+        for (let i = 0; i < width; i++) {
+          const x2 = (i + j * width) * 4;
+          let weight = 0;
+          let weights = 0;
+          let weights_alpha = 0;
+          let gx_r = 0;
+          let gx_g = 0;
+          let gx_b = 0;
+          let gx_a = 0;
+          let center_y = (j + 0.5) * ratio_h;
+          let yy_start = Math.floor(j * ratio_h);
+          let yy_stop = Math.ceil((j + 1) * ratio_h);
+          for (let yy = yy_start; yy < yy_stop; yy++) {
+            let dy = Math.abs(center_y - (yy + 0.5)) / ratio_h_half;
+            let center_x = (i + 0.5) * ratio_w;
+            let w0 = dy * dy; //pre-calc part of w
+            let xx_start = Math.floor(i * ratio_w);
+            let xx_stop = Math.ceil((i + 1) * ratio_w);
+            for (let xx = xx_start; xx < xx_stop; xx++) {
+              let dx = Math.abs(center_x - (xx + 0.5)) / ratio_w_half;
+              let w = Math.sqrt(w0 + dx * dx);
+              if (w >= 1) {
+                //pixel too far
+                continue;
+              }
+              //hermite filter
+              weight = 2 * w * w * w - 3 * w * w + 1;
+              let pos_x = 4 * (xx + yy * width_source);
+              //alpha
+              gx_a += weight * data[pos_x + 3];
+              weights_alpha += weight
+              if (data[pos_x + 3] < 255)
+                weight = weight * data[pos_x + 3] / 250;
+              gx_r += weight * data[pos_x];
+              gx_g += weight * data[pos_x + 1];
+              gx_b += weight * data[pos_x + 2];
+              weights += weight;
+            }
+          }
+          data2[x2] = gx_r / weights;
+          data2[x2 + 1] = gx_g / weights;
+          data2[x2 + 2] = gx_b / weights;
+          data2[x2 + 3] = gx_a / weights_alpha;
+        }
+      }
+      ctx2.putImageData(img2, 0, 0);
+    }
+  }
 };
 </script>
+<style scoped>

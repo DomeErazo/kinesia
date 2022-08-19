@@ -12,21 +12,21 @@
               <v-form ref="form" v-model="form">
                 <p>Por favor ingrese los datos del nuevo trabajador:</p>
                 <v-text-field
-                  ref="nombres"
+                  ref="nombre"
                   label="Nombres"
                   outlined
                   rounded
-                  v-model="nombres"
+                  v-model="nombre"
                   type="text"
                   color="primary"
                 >
                 </v-text-field>
                 <v-text-field
-                  ref="apellidos"
+                  ref="apellido"
                   label="Apellidos"
                   outlined
                   rounded
-                  v-model="apellidos"
+                  v-model="apellido"
                   type="text"
                   color="primary"
                 >
@@ -74,10 +74,30 @@
                   color="primary"
                 >
                 </v-text-field>
+                
+                <v-text-field
+                  ref="usuario"
+                  label="Usuario"
+                  outlined
+                  rounded
+                  v-model="usuario"
+                  type="text"
+                                  color="primary"
+                >
+                </v-text-field>
+                       <v-text-field
+                  ref="contrasena"
+                  label="Contraseña"
+                  outlined
+                  rounded
+                  v-model="contrasena"
+                  type="text"
+                  color="primary"
+                ></v-text-field>
               </v-form>
             </v-card-text>
 
-            <v-btn id="btn-ingreso" color="secondary" @click="agregarCarr">
+            <v-btn id="btn-ingreso" color="secondary" @click="agregarPsic">
               Agregar Trabajador
             </v-btn>
           </v-col>
@@ -180,6 +200,11 @@
                 </v-dialog>
               </v-toolbar>
             </template>
+            <template v-slot:[`item.usuario.estado`]="{ item }">
+              <v-chip :color="getColor(item.usuario.estado)" dark>
+                {{ item.usuario.estado }}
+              </v-chip>
+            </template>
             <template v-slot:no-data>
               <v-btn color="primary" text> No hay registros </v-btn>
             </template>
@@ -224,8 +249,8 @@ export default {
       listaFacultades: [],
       listaCarreras: [],
       cedula: "",
-      nombres: "",
-      apellidos: "",
+      nombre: "",
+      apellido: "",
       fechaNacimiento: "", //localDate
       correo: "",
       ced: [],
@@ -248,11 +273,11 @@ export default {
       headers: [
         {
           text: "Nombres",
-          value: "nombres",
+          value: "nombre",
         },
         {
           text: "Apellidos",
-          value: "apellidos",
+          value: "apellido",
         },
         {
           text: "Cédula",
@@ -282,18 +307,19 @@ export default {
 
         {
           text: "Usuario",
-          value: "usuario",
+          value: "usuario.usuario",
         },
-             {
+        {
           text: "Estado",
-          value: "estado",
+          value: "usuario.estado",
         },
-         { text: "Acciones", value: "actions", sortable: false },
+        { text: "Acciones", value: "actions", sortable: false },
       ],
       search: "",
       desserts: [],
       editedIndex: -1,
       cedula1: "",
+      estado: true,
       // editedItem: {
       //   departamentoProducto: "",
       //   impactoExterno: "",
@@ -307,8 +333,9 @@ export default {
     };
   },
   mounted() {
-    this.obtenerListaEst();
-    this.obtenerFac();
+    // this.obtenerListaEst();
+    // this.obtenerFac();
+    this.obtenerPsic();
     // this.campos();
   },
   computed: {
@@ -324,25 +351,13 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
-    facul: function () {
-      this.prueba.forEach((elementos) => {
-        if (elementos.nombre === this.facul) {
-          this.listaCarreras = elementos.carreras;
-          if (this.listaCarreras == null) {
-            this.facul = null;
-
-            this.$cookies.remove("ROLE_ADMIN");
-            this.$notifier.showMessage({
-              content: `La facultad no tiene carreras ingresadas`,
-              color: "error",
-            });
-          }
-        }
-      });
-    },
   },
 
   methods: {
+    getColor(value) {
+      if (value === "Activo") return "green";
+      else if (value === "Inactivo") return "red";
+    },
     validar(cedula) {
       this.$cookies.set("cedula", cedula);
       //var cedula = document.getElementById("ced").value.trim();
@@ -478,37 +493,30 @@ export default {
         this.editedIndex = -1;
       });
     },
+    async obtenerPsic() {
+      try {
+        const res = await axios.get("/api/personaRlEm/psico/74");
 
-    // guardarMod() {
-    //   if (this.editedIndex > -1) {
-    //     Object.assign(this.desserts[this.editedIndex], this.editedItem);
-    //   } else {
-    //     this.desserts.push({
-    //       departamentoProducto: this.editedItem.departamentoProducto,
-    //       impactoInterno: this.editedItem.impactoInterno,
-    //       impactoExterno: this.editedItem.impactoExterno,
-    //     });
-    //   }
-    //   this.close();
-    // },
-    // async actualizarDat() {
-    //   try {
-    //     const datos = {
-    //       user: this.$cookies.get("dataClient").usuario.nombreUsuario,
-    //       departamentoProducto: this.editedItem.departamentoProducto,
-    //       impactoInterno: this.editedItem.impactoInterno,
-    //       impactoExterno: this.editedItem.impactoExterno,
-    //     };
+        const lis = res.data;
+        console.log(lis);
+        lis.forEach((element) => {
+          if (element.usuario.estado == true) {
+            element.usuario.estado = "Activo";
+          } else {
+            element.usuario.estado = "Inactivo";
+          }
+          this.desserts = res.data;
+        });
 
-    //     await this.$axios.put(
-    //       `api/sgcnegocio/formularioImpactoComparativo/actualizarImpacto/${this.editedItem.id}`,
-    //       datos
-    //     );
-    //     this.guardarMod();
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // },
+        this.desserts = res.data;
+        this.obtenerUsuario();
+
+        //  this.llenarTabla();
+      } catch (err) {
+        console.log(err);
+      }
+    },
+ 
 
     async obtenerFac() {
       this.listaFacultades.slice();
@@ -574,12 +582,11 @@ export default {
 
     llenarTabla() {
       this.desserts.push({
-        nombres: this.nombres,
-        apellidos: this.apellidos,
+        nombre: this.nombre,
+        apellido: this.apellido,
         cedula: this.cedula,
         correo: this.correo,
-        fechaNacimiento: this.fechaNacimiento,
-        carrera: this.carrera,
+       
         usuario: this.usuario,
         telefono: this.telefono,
         genero: this.genero,
@@ -587,15 +594,12 @@ export default {
       this.obtenerListaEst();
     },
 
-    async enviar() {
+    async agregarPsic() {
       if (
-        !this.nombres ||
-        !this.apellidos ||
-        !this.fechaNacimiento ||
+        !this.nombre ||
+        !this.apellido ||
         !this.cedula ||
         !this.correo ||
-        !this.carrera ||
-        !this.semestre ||
         !this.telefono ||
         !this.genero
       ) {
@@ -606,28 +610,26 @@ export default {
       } else {
         try {
           const res = await this.$axios.post(
-            "api/estudiante",
+            "api/inseruser",
             {
-              nombres: this.nombres.trim(),
-              apellidos: this.apellidos.trim(),
-              fechaNacimiento: this.fechaNacimiento,
-              cedula: this.cedula.trim(),
-              correo: this.correo.trim(),
-              telefono: this.telefono.trim(),
-              genero: this.genero,
-              semestre: this.semestre,
-              carrera: this.carrera,
-
-              esControlador: this.esControlador,
+              nombre: this.nombre.trim(),
+                apellido: this.apellido.trim(),
+                telefono: this.telefono.trim(),
+                rol: "psico",
+                cedula: this.cedula.trim(),
+                genero:this.generos,
+                correo:this.correo,
+usuario:{
+              usuario: this.usuario,
+              contrasena: this.contrasena,
+              estado: true,
+             },
+         
             },
-            {
-              headers: {
-                authorization: "SGVUCE " + this.$cookies.get("ROLE_ADMIN"),
-              },
-            },
+           
 
-            (this.nombres = ""),
-            (this.apellidos = ""),
+            (this.nombre = ""),
+            (this.apellido = ""),
             (this.fechaNacimiento = ""),
             (this.cedula = ""),
             (this.correo = ""),
@@ -637,6 +639,7 @@ export default {
             (this.carrera = ""),
             (this.esControlador = false)
           );
+
           this.llenarTabla(),
             this.$notifier.showMessage({
               content: "Estudiante añadido con éxito",
