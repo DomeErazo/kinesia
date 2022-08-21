@@ -19,25 +19,25 @@
           </v-toolbar-title>
 
           <v-spacer />
-       
+
           <v-spacer />
-          
+
           <div class="text-center">
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn dark icon v-bind="attrs" v-on="on">
-                  <v-icon style="color: #33CCFF"> mdi-account </v-icon>
+                  <v-icon style="color: #ffffff"> mdi-account </v-icon>
                 </v-btn>
               </template>
               <v-list>
-                <v-list-item >
+                <v-list-item>
                   <v-list-item-avatar>
-                     <img
-              class="mt-2"
-              src="/kinesialogo.jpg"
-              width="60"
-              style="margin-left: -15px"
-            />
+                    <img
+                      class="mt-2"
+                      src="/kinesialogo.jpg"
+                      width="60"
+                      style="margin-left: -15px"
+                    />
                   </v-list-item-avatar>
 
                   <v-list-item-content>
@@ -68,68 +68,34 @@
           <v-list>
             <v-list-item
               v-for="item in items"
-              style="color: #33CCFF"
+              style="color: #ffffff"
               :key="item.key"
               :to="item.route"
               nuxt
               exact
             >
               <v-list-item-icon>
-                <v-icon style="color: #33CCFF">{{ item.icon }}</v-icon>
+                <v-icon style="color: #ffffff">{{ item.icon }}</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-title style="color: #33CCFF">{{
+                <v-list-item-title style="color: #ffffff">{{
                   item.title
                 }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item @click="logout">
               <v-list-item-icon>
-                <v-icon style="color: #33CCFF">mdi-logout</v-icon>
+                <v-icon style="color: #ffffff">mdi-logout</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title style="color: #33CCFF"
+                <v-list-item-title style="color: #ffffff"
                   >Salir</v-list-item-title
                 >
               </v-list-item-content>
             </v-list-item>
           </v-list>
         </v-navigation-drawer>
-        <!-- <v-navigation-drawer v-else v-model="drawer" color="secondary" dark app>
-          <v-list-item class="px-2">
-            <v-list-item-avatar>
-              <v-img
-                src="https://www.labicok.com/wp-content/uploads/2020/06/default-user-image.png"
-              />
-            </v-list-item-avatar>
-          </v-list-item>
-          <v-divider />
-          <v-list>
-            <v-list-item
-              v-for="item in items"
-              :key="item.key"
-              :to="item.route"
-              nuxt
-            >
-              <v-list-item-icon>
-                <v-icon>{{ item.icon }}</v-icon>
-              </v-list-item-icon>
-
-              <v-list-item-content>
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item @click="logout">
-              <v-list-item-icon>
-                <v-icon>mdi-logout</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>Salir</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-navigation-drawer> -->
       </div>
       <v-main>
         <Snackbar />
@@ -159,63 +125,34 @@ export default {
           route: "/Entrevista/inicio/",
           key: 1,
         },
-        
         {
-          title: "Entrevista",
+          title: "Lista de Postulantes",
           icon: "mdi-account-group-outline",
-          route: "/Entrevista/Entrevista",
-          disabled:true,
+          route: "/Entrevista/listaPost",
+
           key: 2,
         },
         {
-          title: "Resultados",
+          title: "Entrevista",
           icon: "mdi-account-group-outline",
-          route: "/Entrevista/resultados",
-          key: 3,
+         
+          disabled:true
         },
-        // {
-        //   title: "Administradores",
-        //   icon: "mdi-account-edit",
-        //   route: "/creacionAdminCon",
-        //   key: 4,
-        // },
-        // {
-        //   title: "Plan Vacunación",
-        //   icon: "mdi-clipboard-check-multiple-outline",
-        //   route: "/planVacunas",
-        //   key: 5,
-        // }, {
-        //   title: "Estadísticas",
-        //   icon: "mdi-chart-bar",
-        //   route: "/App",
-        //   key: 6,
-        // },
-        // { title: 'Liderazgo', icon: 'mdi-pen', route: '/userUniversidad/liderazgo', key: 4 },
-        // { title: 'Paso 2 - Actividades Prioritarias', icon: 'mdi-account-supervisor-outline', route: '/userUniversidad/pasoDos', key: 4 },
-        // { title: 'Paso 3 - Recursos Escenciales', icon: 'mdi-ab-testing', route: '/userUniversidad/pasoTres', key: 5 },
-        // { title: 'Paso 4 - Evaluacion de Riesgos', icon: 'mdi-notebook-edit-outline', route: '/userUniversidad/riesgos', key: 6 },
-        // { title: 'Paso 5 - Protección ante Desastres', icon: 'mdi-alert', route: '/userUniversidad/mitigacion', key: 7 },
+       
       ],
     };
   },
 
-  
-
- 
-
   methods: {
-
     async logout() {
-      
       this.$router.push("/login");
     },
   },
 };
 </script>
 <style scoped>
-
 .v-btn--icon.v-size--default .v-icon,
 .v-btn--fab.v-size--default .v-icon {
-  color: #33CCFF;
+  color: #ffffff;
 }
 </style>

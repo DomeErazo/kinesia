@@ -26,7 +26,7 @@
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn dark icon v-bind="attrs" v-on="on">
-                  <v-icon style="color: #33CCFF"> mdi-account </v-icon>
+                  <v-icon style="color: #FFFFFF"> mdi-account </v-icon>
                 </v-btn>
               </template>
               <v-list>
@@ -68,28 +68,28 @@
           <v-list>
             <v-list-item
               v-for="item in items"
-              style="color: #33CCFF"
+              style="color: #FFFFFF"
               :key="item.key"
               :to="item.route"
               nuxt
               exact
             >
               <v-list-item-icon>
-                <v-icon style="color: #33CCFF">{{ item.icon }}</v-icon>
+                <v-icon style="color: #FFFFFF">{{ item.icon }}</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-title style="color: #33CCFF">{{
+                <v-list-item-title style="color: #FFFFFF">{{
                   item.title
                 }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item @click="logout">
               <v-list-item-icon>
-                <v-icon style="color: #33CCFF">mdi-logout</v-icon>
+                <v-icon style="color: #FFFFFF">mdi-logout</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title style="color: #33CCFF"
+                <v-list-item-title style="color: #FFFFFF"
                   >Salir</v-list-item-title
                 >
               </v-list-item-content>
@@ -215,6 +215,6 @@ export default {
 
 .v-btn--icon.v-size--default .v-icon,
 .v-btn--fab.v-size--default .v-icon {
-  color: #33CCFF;
+  color: #FFFFFF;
 }
 </style>

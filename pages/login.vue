@@ -34,7 +34,7 @@
                         <v-text-field
                           label="Usuario"
                           name="usuario"
-                          v-model="username"
+                          v-model="usuario"
                           type="text"
                           color="secondary"
                           style="width:200px; margin-left: 30%;"
@@ -42,9 +42,9 @@
                         <v-text-field
                           id="Contraseña"
                           label="Contraseña"
-                          name="password"
-                          v-model="password"
-                          type="password"
+                          name="contrasena"
+                          v-model="contrasena"
+                          type="contrasena"
                           color="secondary"
                           style="width:200px; margin-left: 30%;"
                         
@@ -80,19 +80,19 @@ export default {
   data() {
     return {
     
-      username: "",
-      password: "",
+      usuario: "",
+      contrasena: "",
      
     };
   },
   methods: {
  async enviar() { 
       try {
-        const respuesta = await this.$axios.post("/mineria/inseruser", {
+        const respuesta = await this.$axios.post("/api/kinterview", {
           usuario: this.usuario,
           contrasena: this.contrasena
         })
-        console.log(respuesta)
+        console.log(respuesta.data)
         if (!respuesta.data && !respuesta.data.nombre) {
           this.alert = true
           this.usuario = ''
@@ -101,13 +101,13 @@ export default {
         } else {
           this.$store.commit('session/logIn', respuesta.data)
           this.alert = false
-          let type = respuesta.data.usuario.role
+          let type = respuesta.data.usuario.rol
 
-          if(type === "admin"){
+          if(type === "admi"){
             this.$router.push('/Administador/inicio')
-          }else if(type === "DEPARTAMENTO") {
+          }else if(type === "adminE") {
             this.$router.push('/AdministradorEmpresarial/inicio')
-          } else {
+          } else if(type === "psico"){
             this.$router.push('/Entrevista/inicio')
           }
 

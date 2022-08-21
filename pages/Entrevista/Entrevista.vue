@@ -1,59 +1,70 @@
 <template>
-<div>
-  <v-row>
-    <p>Holi</p>
-  </v-row>
-  <!-- <v-row > -->
+  <div>
+    <v-row>
+      <p>Holi</p>
+    </v-row>
+    <!-- <v-row > -->
     <!-- <v-col cols="6" sm="6" md="6" > -->
-  <v-card class="text-center">
-   
-    <v-card-text >
-       
-      <video id="video" playsinline autoplay style="width: 1px;" ref=“myvideo”></video>
-      <!-- <v-btn :disabled="isPlaying" @click="play">Play</v-btn>
+    <v-card class="text-center">
+      <v-card-text>
+        <video id="video" playsinline autoplay style="width: 30px"></video>
+        <!-- <v-btn :disabled="isPlaying" @click="play">Play</v-btn>
       <v-btn :disabled="!isPlaying" @click="stop">Stop</v-btn> -->
-      <!-- <v-btn class="primary mb-2" block id="cambiar-camara" @click="cambiarCamara()"><v-icon>mdi-camera-party-mode</v-icon>Cambiar camara</v-btn> -->
-      <canvas id="canvas" width="100" height="100" style="max-width: 100%;"></canvas>
-      <canvas v-show="false" id="otrocanvas" width="300" height="300" display:none></canvas>
-      <p class="text-h5 text-center black--text">
-        AlexNet AD - {{ prediction }}
-      </p>
-    </v-card-text>
-  </v-card>
-  <!-- </v-col> -->
-  <!-- </v-row> -->
+        <!-- <v-btn class="primary mb-2" block id="cambiar-camara" @click="cambiarCamara()"><v-icon>mdi-camera-party-mode</v-icon>Cambiar camara</v-btn> -->
+        <canvas
+          id="canvas"
+          width="400"
+          height="400"
+        
+          style="max-width: 100%"
+        >canvas</canvas>
+        <canvas
+          v-show="false"
+          id="otrocanvas"
+          width="300"
+          height="300"
+     
+          
+        >otrocanvas</canvas>
+        <img src="" id="photo" alt="photo"   width="300" 
+          height="300" name="imagen">
+        <!-- <v-btn id="startbutton" @click="takePicture">Take</v-btn> -->
+        <p class="text-h5 text-center black--text">
+        - {{ this.prediction }}
+        </p>
+        <div id="resul"></div>
+      </v-card-text>
+    </v-card>
+    <!-- </v-col> -->
+    <!-- </v-row> -->
   </div>
 </template>
 <script>
-import * as tf from '@tensorflow/tfjs'
-import path from 'path';
+import * as tf from "@tensorflow/tfjs";
 export default {
   layout: "entrevista",
-  data(){
+  data() {
     return {
       overlay: false,
-      	isPlaying: false,
-      value:[
-        1000,
-        213,
-      ],
-        facingMode: 'user',
+      isPlaying: false,
+      value: [1000, 213],
+      facingMode: "user",
       tamano: 100,
       currentStream: undefined,
       video: undefined,
-      canvas: undefined,
+      photo: undefined,
+      photo: undefined,
       otrocanvas: undefined,
       ctx: undefined,
-      prediction: '-',
+      prediction: "-",
       modelo: null,
       category: null,
-      modelReady:false,
-      predictedValue:'Click on train',
-      valueToPredict:'',
-      
-    }
+      modelReady: false,
+      percentage: 0,
+ 
+    };
   },
-  async mounted(){
+  async mounted() {
     // let that =this;
     // async function loadModel(){
     //   that.modelo=await tf.loadLayersModel("/modelo/model.json");
@@ -61,110 +72,135 @@ export default {
     //   // that.predictedValue='Ready for making predictions'
     // }
     // loadModel();
-   
-    await this.initModel()
-    this.mostrarCamara()
-  },
-  methods:{
 
-    async initModel(){
+    await this.initModel();
+    this.mostrarCamara();
+  },
+  methods: {
+    async initModel() {
       console.log("Cargando modelo...");
-      this.overlay=true
-      this.modelo=await tf.loadLayersModel("/modelo/model.json")
-        this.overlay = false
+      this.overlay = true;
+      this.modelo = await tf.loadLayersModel("/modelo/model.json");
+      this.overlay = false;
       console.log("Modelo cargado", this.modelo);
+      
     },
-     procesarCamara() {
-      this.ctx.drawImage(this.video, 0, 0,100, 100, 0, 0, 100, 100);
+     takePicture(){
+      canvas.width = 300;
+      canvas.height = 300;
+      canvas.getContext("2d").drawImage(video, 0, 0, 300, 300);
+      const data = canvas.toDataURL("analisis/png");
+      const img=(data.replace(/data^:image\/(png|jpg);base64,/,""))
+      canvas.setAttribute('src', img);
+   
+       setTimeout(this.takePicture, 8000);
+       const imagen=document.imagen;
+      // this.predecir();
+
+    },
+    procesarCamara() {
+
+      this.ctx.drawImage(this.video, 0, 0, 400, 400, 0, 0, 400, 400);
       setTimeout(this.procesarCamara, 20);
     },
+    loadPicture: function () {},
     mostrarCamara() {
-      this.video = document.querySelector("#video")
-      this.canvas = document.querySelector("#canvas")
-      this.otrocanvas = document.querySelector("#otrocanvas")
-      this.ctx = this.canvas.getContext("2d")
+      
+      this.video = document.querySelector("#video");
+      this.canvas = document.querySelector("#canvas");
+      this.otrocanvas = document.querySelector("#otrocanvas");
+      this.photo = document.querySelector("#photo");
+      this.ctx = this.canvas.getContext("2d");
+
       const opciones = {
         audio: false,
         video: {
-          width: 100, height: 100
-        }
-      }
+          width: 400,
+          height: 400,
+        },
+      };
 
       if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia(opciones)
-          .then(localMediaStream => {
-            this.currentStream = localMediaStream
+        navigator.mediaDevices
+          .getUserMedia(opciones)
+          .then((localMediaStream) => {
+            this.currentStream = localMediaStream;
             this.video.srcObject = localMediaStream;
-            this.procesarCamara()
+           this.takePicture();
+            this.procesarCamara();
             this.video.play();
-            this.predecir()
+            this.predecir();
           })
-          .catch(function(err) {
+          .catch(function (err) {
             alert("No se pudo utilizar la camara :(");
             alert(err);
-          })
+          });
       } else {
         alert("No existe la funcion getUserMedia");
       }
     },
+   
     predecir() {
-     
       if (this.modelo != null) {
         this.resamplesingle(this.canvas, 300, 300, this.otrocanvas);
       }
-      setTimeout(this.predecir, 8000)
-        //Hacer la predicción
+      setTimeout(this.predecir, 8000);
+   
+      //Hacer la predicción
 
-        const ctx2 = this.otrocanvas.getContext("2d");
-        // const imageData=ctx2.drawImage(0,0,300,300)
-        const imgData = ctx2.getImageData(0,0, 1, 300);
+      const ctx2 = this.canvas.getContext("2d");
+     
+      // const imageData=ctx2.drawImage(0,0,300,300)
+      const imgData = ctx2.getImageData(0, 0, 300, 300);
 
-        let arr = [];
-        let arr300 = [];
-         for (let p=0; p < imgData.data.length; p++) {
-          const rojo = imgData.data[p] / 255;
-          const verde = imgData.data[p+1] / 255;
-          const azul = imgData.data[p+2] / 255;
-          const gris = (rojo+verde+azul)/3;
+      let arr = [];
+      let arr300 = [];
+      for (let p = 0; p < imgData.data.length; p += 4) {
+        const red = imgData.data[p] / 255;
+        const green = imgData.data[p + 1] / 255;
+        const blue = imgData.data[p + 2] / 255;
 
-          arr300.push([gris]);
-          if (arr300.length === 300) {
-            arr.push(arr300);
-            arr300 = [];
-          }
+        arr300.push([red, green, blue]);
+        if (arr300.length === 300) {
+          arr.push(arr300);
+          arr300 = [];
         }
+      }
 
       arr = [arr];
 
       // const tensor = tf.tensor4d(arr);
-         const tfarray = tf.tensor4d(arr);
-      const resul = this.modelo.predict(tfarray).dataSync();
-      if( resul ==0){
-        this.prediction="Aceptación"
-      }else if(resul ==1){
-          this.prediction="Confianza"
+      const tfarray = tf.tensor4d(arr);
+       const resul = this.modelo.predict(tfarray).dataSync();
+      // let resul = this.modelo.predict(tfarray).dataSync();
+      let mayorIndice=resul.indexOf(Math.max.apply(null, resul));
+// console.log(resul.indexOf(Math.max.apply(null, resul)))
+      const class_names = ['aceptacion','confianza','confundido','inseguro','mentira','nervioso','verdad']
+      document.getElementById("resul").innerHTML=class_names[mayorIndice]
+      console.log(resul.indexOf(Math.max.apply(null, resul)));
+      if (mayorIndice == 0) {
+        this.prediction = "Aceptación";
+      } else if ((mayorIndice == 1)) {
+        this.prediction = "Confianza";
+      } else if ((mayorIndice == 2)) {
+        this.prediction = "Confundido";
+      } else if ((mayorIndice == 3)) {
+        this.prediction = "Inseguridad";
+      } else if ((mayorIndice == 4)) {
+        this.prediction = "Mentira";
+      } else if ((mayorIndice == 5)) {
+        this.prediction = "Nervioso";
+      } else if ((mayorIndice == 6)) {
+        this.prediction = "Verdad";
       }
-      else if(resul ==2){
-          this.prediction="Confundido"
-      }else if(resul ==3){
-          this.prediction="Inseguridad"
-      }else if(resul ==4){
-          this.prediction="Mentira"
-      }else if(resul ==5){
-          this.prediction="Nervioso"
-      }else if(resul ==6){
-          this.prediction="Verdad"
-      }
-      resul = 0 ? this.prediction ="Aceptación": this.prediction="Chao"
+  
+      // resul = 0 ? this.prediction ="Aceptación": this.prediction="Chao"
       // prediction.print();
       // return prediction.get(0,0);
-// console.log(tensor)
+      console.log(this.prediction)
       // const resultDenso = this.modelo.predict(tensor);
       //resultDenso tiene el numerito
       // resultDenso <= .5 ? this.pediction = "Gato" : this.pediction = "Perro"
-
-      
-      
     },
     // predictValue(inputs){
     //   const tfarray = tf.tensor4d(arr);
@@ -172,7 +208,7 @@ export default {
     //   prediction.print();
     //   return prediction.get(0,0);
     // },
- 
+
     resamplesingle(canvas, width, height, resize_canvas) {
       const width_source = canvas.width;
       const height_source = canvas.height;
@@ -221,9 +257,9 @@ export default {
               let pos_x = 4 * (xx + yy * width_source);
               //alpha
               gx_a += weight * data[pos_x + 3];
-              weights_alpha += weight
+              weights_alpha += weight;
               if (data[pos_x + 3] < 255)
-                weight = weight * data[pos_x + 3] / 250;
+                weight = (weight * data[pos_x + 3]) / 250;
               gx_r += weight * data[pos_x];
               gx_g += weight * data[pos_x + 1];
               gx_b += weight * data[pos_x + 2];
@@ -237,8 +273,8 @@ export default {
         }
       }
       ctx2.putImageData(img2, 0, 0);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

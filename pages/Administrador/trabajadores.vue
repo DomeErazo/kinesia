@@ -1,23 +1,27 @@
 <template>
   <v-card>
     <v-responsive :aspect-ratio="16 / 9">
-      <!-- <h1 style="text-align: center; margin-bottom: 10px">
-        Ingreso Estudiantes
-      </h1> -->
       <img class="imagen" src="/trabajadores.svg" />
       <div class="container">
-        <p style="font-weight: 600">
-          
-        </p>
-     
+        <v-row align="center" justify="center">
+          <v-col cols="12" sm="15" md="8">
+            <v-autocomplete
+              :items="listaEmpresas"
+              label="Empresas"
+              outlined
+              v-model="facul"
+              rounded
+            ></v-autocomplete>
+          </v-col>
+        </v-row>
         <v-row align="center" justify="center">
           <v-col cols="12" sm="15" md="8" v-if="facul">
             <v-card-text class="elevation-12" id="card-in">
-              <v-form ref="form" lazy-validation v-model="valid">
+              <v-form ref="form" v-model="form">
                 <p>Por favor ingrese los datos del nuevo trabajador:</p>
                 <v-text-field
                   ref="nombre"
-                  label="nombre"
+                  label="Nombres"
                   outlined
                   rounded
                   v-model="nombre"
@@ -27,7 +31,7 @@
                 </v-text-field>
                 <v-text-field
                   ref="apellido"
-                  label="apellido"
+                  label="Apellidos"
                   outlined
                   rounded
                   v-model="apellido"
@@ -41,33 +45,21 @@
                   outlined
                   rounded
                   v-model="cedula"
-                  :rules="[rules.cedula, rules.counter, rules.ced]"
+                  :rules="[rules.ced]"
                   counter
-                  @change="campos"
                   maxlength="10"
                   color="primary"
                 >
                 </v-text-field>
-
-                <!-- <v-text-field
-                  v-model="fechaNacimiento"
-                  label="Fecha de Nacimiento"
-                  outlined
-                  rounded
-                  type="date"
-                  name="user_date"
-                  id="user_date"
-                ></v-text-field> -->
-                <!-- <input type="date" v-model="fechaNacimiento" @click="calculateAge" name="user_date" id="user_date"/> -->
                 <v-text-field
                   ref="telefono"
                   label="Teléfono"
                   outlined
                   rounded
                   v-model="telefono"
-                  :rules="[rules.tel, rules.counter]"
-                  counter
                   maxlength="10"
+                  :rules="[rules.tel]"
+                  counter
                   color="primary"
                 >
                 </v-text-field>
@@ -79,23 +71,6 @@
                   v-model="genero"
                 ></v-select>
 
-                <!-- <v-autocomplete
-                  :items="listaCarreras"
-                  label="Carrera"
-                  v-model="carrera"
-                  outlined
-                  rounded
-                ></v-autocomplete> -->
-                <!-- <v-text-field
-                  ref="semestre"
-                  label="Semestre"
-                  outlined
-                  rounded
-                  v-model="semestre"
-                  type="number"
-                  color="primary"
-                >
-                </v-text-field> -->
                 <v-text-field
                   ref="correo"
                   label="Correo electrónico"
@@ -107,16 +82,27 @@
                   color="primary"
                 >
                 </v-text-field>
-                <!-- <div>
-                  Tiene permisos de
-                  <strong>controlador?</strong>
-                </div>
-                <v-checkbox
-                  v-model="esControlador"
+                <h1 style="margin-bottom: 15px">Creación de usuario</h1>
+
+                <v-text-field
+                  ref="usuario"
+                  label="Usuario"
+                  outlined
+                  rounded
+                  v-model="usuario"
+                  type="text"
                   color="primary"
-                  label="Si/No"
                 >
-                </v-checkbox> -->
+                </v-text-field>
+                <v-text-field
+                  ref="contrasena"
+                  label="Contraseña"
+                  outlined
+                  rounded
+                  v-model="contrasena"
+                  type="text"
+                  color="primary"
+                ></v-text-field>
               </v-form>
             </v-card-text>
 
@@ -125,7 +111,7 @@
               color="secondary"
               :disabled="!valid"
               type="button"
-              @click="calculateAge"
+              @click="enviar"
             >
               Agregar
             </v-btn>
@@ -165,23 +151,40 @@
                         <v-row>
                           <v-col cols="12" sm="6" md="6">
                             <v-text-field
-                              v-model="nombre"
+                              v-model="editedItem.nombre"
                               label="nombre"
-                              :rules="[() => !!nombre || 'Campo obligatorio']"
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              v-model="apellido"
-                              label="apellido"
                               :rules="[
-                                () => !!apellido || 'Campo obligatorio',
+                                () =>
+                                  !!editedItem.nombre || 'Campo obligatorio',
                               ]"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="6">
                             <v-text-field
-                              v-model="cedula"
+                              v-model="editedItem.apellido"
+                              label="apellido"
+                              :rules="[
+                                () =>
+                                  !!editedItem.apellido || 'Campo obligatorio',
+                              ]"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              v-model="editedItem.telefono"
+                              label="Teléfono"
+                              :rules="[
+                                rules.tel,
+                                rules.counter,
+                                rules.required,
+                              ]"
+                              counter
+                              maxlength="10"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              v-model="editedItem.cedula"
                               :rules="[
                                 rules.ced,
                                 rules.counter,
@@ -194,58 +197,24 @@
                               label="Cédula"
                             ></v-text-field>
                           </v-col>
-                          <!-- <v-col cols="12" sm="6" md="6"> -->
-                            <!-- <v-text-field
-                              v-model="fechaNacimiento"
-                              label="Fecha de Nacimiento"
-                              type="date"
-                              :rules="[
-                                () => !!fechaNacimiento || 'Campo obligatorio',
-                              ]"
-                            ></v-text-field>
-                          </v-col> -->
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              v-model="correo"
-                              label="Correo electrónico"
-                              :rules="[rules.email, rules.required]"
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              v-model="telefono"
-                              label="Teléfono"
-                              :rules="[
-                                rules.tel,
-                                rules.counter,
-                                rules.required,
-                              ]"
-                              counter
-                              maxlength="10"
-                            ></v-text-field>
-                          </v-col>
                           <v-col cols="12" sm="6" md="6">
                             <v-select
                               :items="generos"
                               label="Género"
-                              v-model="genero"
-                              :rules="[() => !!genero || 'Campo obligatorio']"
+                              v-model="editedItem.genero"
+                              :rules="[
+                                () =>
+                                  !!editedItem.genero || 'Campo obligatorio',
+                              ]"
                             ></v-select>
-                          </v-col>
-                          <!-- <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              v-model="semestre"
-                              label="Semestre"
-                              type="number"
-                            ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="6">
-                            <v-select
-                              v-model="carrera"
-                              label="Carrera"
-                             
-                            ></v-select>
-                          </v-col> -->
+                            <v-text-field
+                              v-model="editedItem.correo"
+                              label="Correo electrónico"
+                              :rules="[rules.email, rules.required]"
+                            ></v-text-field>
+                          </v-col>
                         </v-row>
                       </v-container>
                     </v-card-text>
@@ -255,22 +224,26 @@
                         Cancelar
                       </v-btn>
 
-                      <v-btn color="blue darken-1" text> Editar </v-btn>
+                      <v-btn color="blue darken-1" text @click="actualizarDat">
+                        Editar
+                      </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialogDelete" max-width="500px">
+                <v-dialog v-model="dialogDelete" max-width="650px">
                   <v-card>
                     <v-card-title class="text-h7"
-                      >¿Estás seguro que deseas borrar el
-                      registro?</v-card-title
+                      >¿Está seguro que desea cambiar el estado del
+                      trabajador?</v-card-title
                     >
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn color="blue darken-1" text @click="closeDelete"
                         >Cancelar</v-btn
                       >
-                      <v-btn color="blue darken-1" text>Aceptar</v-btn>
+                      <v-btn color="blue darken-1" text @click="estadoAdminE"
+                        >Aceptar</v-btn
+                      >
                       <v-spacer></v-spacer>
                     </v-card-actions>
                   </v-card>
@@ -281,7 +254,12 @@
               <v-icon small class="mr-2" @click="editItem(item)">
                 mdi-pencil
               </v-icon>
-              <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+              <v-icon small @click="deleteItem(item)"> mdi-update </v-icon>
+            </template>
+            <template v-slot:[`item.usuario.estado`]="{ item }">
+              <v-chip :color="getColor(item.usuario.estado)" dark>
+                {{ item.usuario.estado }}
+              </v-chip>
             </template>
             <template v-slot:no-data>
               <v-btn color="primary" text> No hay registros </v-btn>
@@ -304,6 +282,7 @@ export default {
     return {
       valid: true,
       facul: "",
+      id: "",
 
       rules: {
         required: (value) => !!value || "Campo Requerido.",
@@ -330,12 +309,15 @@ export default {
       cedula: "",
       nombre: "",
       apellido: "",
-    listaEmpresas:[],
+      listaEmpresas: [],
+      contrasena: "",
+      idEmpresas: [],
+      // listaUnida:[],
       correo: "",
       ced: [],
       usuario: "",
       telefono: "",
-    
+
       genero: "",
 
       esControlador: false,
@@ -343,10 +325,6 @@ export default {
       prueba: [],
       dialog: false,
       dialogDelete: false,
-      // id: "",
-      // departamentoProducto: "",
-      // impactoExterno: "",
-      // impactoInterno: "",
 
       headers: [
         {
@@ -362,10 +340,7 @@ export default {
           value: "cedula",
           sortable: true,
         },
-        // {
-        //   text: "Fecha de Nacimiento",
-        //   value: "fechaNacimiento",
-        // },
+
         {
           text: "Género",
           value: "genero",
@@ -387,39 +362,43 @@ export default {
           text: "Usuario",
           value: "usuario.usuario",
         },
+        {
+          text: "Estado",
+          value: "usuario.estado",
+        },
+
+        { value: "actions", sortable: false },
       ],
       search: "",
-      desserts: [
-      
-      ],
+      desserts: [],
       editedIndex: -1,
-      cedula1:"",
-      // editedItem: {
-      //   departamentoProducto: "",
-      //   impactoExterno: "",
-      //   impactoInterno: "",
-      // },
-      // defaultItem: {
-      //   departamentoProducto: "",
-      //   impactoExterno: "",
-      //   impactoInterno: "",
-      // },
+      editedItem: {
+        nombre: "",
+        apellido: "",
+        telefono: "",
+        cedula: "",
+        genero: "",
+        correo: "",
+      },
+      defaultItem: {
+        nombre: "",
+        apellido: "",
+        telefono: "",
+        cedula: "",
+        genero: "",
+        correo: "",
+      },
     };
   },
   mounted() {
-    // this.obtenerListaEst();
     this.obtenerAdminE();
-    // this.campos();
-    
-    
+    this.obtenerListaEmpr();
   },
+
   computed: {
-    
     formTitle() {
       return this.editedIndex === -1 ? "Nuevo Registro" : "Editar Registro";
     },
-
-    
   },
 
   watch: {
@@ -429,129 +408,28 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
-    facul: function () {
-      this.prueba.forEach((elementos) => {
-        if (elementos.nombre === this.facul) {
-          this.listaCarreras = elementos.carreras;
-          if(this.listaCarreras==null){
-            this.facul=null
-            
-          this.$cookies.remove("ROLE_ADMIN");
-          this.$notifier.showMessage({
-            content: `La facultad no tiene carreras ingresadas`,
-            color: "error",
-          });
-         
-          }
-        }
-      });
-    },
   },
 
   methods: {
-    validar(cedula) {
-      this.$cookies.set("cedula", cedula);
-      //var cedula = document.getElementById("ced").value.trim();
-      console.log(cedula);
-
-      //Preguntamos si la cedula consta de 10 digitos
-      if (cedula.length == 10) {
-        //Obtenemos el digito de la region que sonlos dos primeros digitos
-        var digito_region = cedula.substring(0, 2);
-
-        //Pregunto si la region existe ecuador se divide en 24 regiones
-        if (digito_region >= 1 && digito_region <= 24) {
-          // Extraigo el ultimo digito
-          var ultimo_digito = cedula.substring(9, 10);
-
-          //Agrupo todos los pares y los sumo
-          var pares =
-            parseInt(cedula.substring(1, 2)) +
-            parseInt(cedula.substring(3, 4)) +
-            parseInt(cedula.substring(5, 6)) +
-            parseInt(cedula.substring(7, 8));
-
-          //Agrupo los impares, los multiplico por un factor de 2, si la resultante es > que 9 le restamos el 9 a la resultante
-          var numero1 = cedula.substring(0, 1);
-          var numero1 = numero1 * 2;
-          if (numero1 > 9) {
-            var numero1 = numero1 - 9;
-          }
-
-          var numero3 = cedula.substring(2, 3);
-          var numero3 = numero3 * 2;
-          if (numero3 > 9) {
-            var numero3 = numero3 - 9;
-          }
-
-          var numero5 = cedula.substring(4, 5);
-          var numero5 = numero5 * 2;
-          if (numero5 > 9) {
-            var numero5 = numero5 - 9;
-          }
-
-          var numero7 = cedula.substring(6, 7);
-          var numero7 = numero7 * 2;
-          if (numero7 > 9) {
-            var numero7 = numero7 - 9;
-          }
-
-          var numero9 = cedula.substring(8, 9);
-          var numero9 = numero9 * 2;
-          if (numero9 > 9) {
-            var numero9 = numero9 - 9;
-          }
-
-          var impares = numero1 + numero3 + numero5 + numero7 + numero9;
-
-          //Suma total
-          var suma_total = pares + impares;
-
-          //extraemos el primero digito
-          var primer_digito_suma = String(suma_total).substring(0, 1);
-
-          //Obtenemos la decena inmediata
-          var decena = (parseInt(primer_digito_suma) + 1) * 10;
-
-          //Obtenemos la resta de la decena inmediata - la suma_total esto nos da el digito validador
-          var digito_validador = decena - suma_total;
-
-          //Si el digito validador es = a 10 toma el valor de 0
-          if (digito_validador == 10) var digito_validador = 0;
-
-          //Validamos que el digito validador sea igual al de la cedula
-          if (digito_validador == ultimo_digito) {
-            // document.getElementById("salida").innerHTML = "Cedula Válida";
-            return true;
-          } else {
-            //document.getElementById("salida").innerHTML = "Cedula Inválida";
-            return false;
-          }
-        } else {
-          // imprimimos en consola si la region no pertenece
-          return false;
-        }
-      } else {
-        return false;
-      }
+    limpiar() {
+      (this.nombre = ""),
+        (this.apellido = ""),
+        (this.cedula = ""),
+        (this.telefono = ""),
+        (this.genero = ""),
+        (this.correo = ""),
+        (this.usuario = ""),
+        (this.contrasena = ""),
+        (this.facul = ""),
+        this.$refs.form.reset();
+      this.obtenerListaEmpr();
     },
 
-    async calculateAge() {
-      var d = document.getElementById("user_date").value;
-      var inDate = new Date(d);
-      var anio = inDate.getFullYear();
-      var fec_actual = new Date();
-      var fec_anio = fec_actual.getFullYear();
-      var edad = fec_anio - anio;
-      if (edad >= 16) {
-        this.enviar();
-      } else {
-        this.$notifier.showMessage({
-          content: `Ingrese una edad válida`,
-          color: "warning",
-        });
-      }
+    getColor(value) {
+      if (value === "Activo") return "green";
+      else if (value === "Inactivo") return "red";
     },
+
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
@@ -585,148 +463,62 @@ export default {
       });
     },
     async obtenerAdminE() {
-     
       try {
         const res = await axios.get("/api/personaRol/adminE");
-       
+
+        const lis = res.data;
+        console.log(lis);
+        lis.forEach((facu) => {
+          if (facu.usuario.estado == true) {
+            facu.usuario.estado = "Activo";
+          } else {
+            facu.usuario.estado = "Inactivo";
+          }
+          this.desserts = res.data;
+        });
+
+        this.desserts = res.data;
+      } catch (err) {}
+    },
+    async obtenerListaEmpr() {
+      // let user = this.$cookies.get("dataClient").usuario.usuario;
+      try {
+        const res = await this.$axios.get("/api/empresa");
 
         const lis = res.data;
         console.log(lis)
 
-        lis.forEach((facu) => {
-          this.listaEmpresas.push(`${facu.empresa.nombreempresa}`);
+        lis.forEach((element) => {
+          this.listaEmpresas.push(`${element.nombreempresa}`);
         
         });
-
-this.desserts=res.data;
-this.obtenerUsuario();
-       
-      //  this.llenarTabla();
-        
       } catch (err) {
-        console.log(err);
-     
+      
       }
     },
-       async obtenerUsuario() {
-     
-      try {
-        const res = await axios.get("/api/personaRol/adminE");
-       
-
-        const lis = res.data;
-       
-
-        lis.forEach((facu) => {
-          // this.desserts=facu.empresa;
-          console.log(facu.usuario.usuario)
-          this.desserts[usuario]=facu.usuario.nombre;
-        
-        });
-
-       
-      //  this.llenarTabla();
-        
-      } catch (err) {
-        console.log(err);
-     
-      }
-    },
-
-    // guardarMod() {
-    //   if (this.editedIndex > -1) {
-    //     Object.assign(this.desserts[this.editedIndex], this.editedItem);
-    //   } else {
-    //     this.desserts.push({
-    //       departamentoProducto: this.editedItem.departamentoProducto,
-    //       impactoInterno: this.editedItem.impactoInterno,
-    //       impactoExterno: this.editedItem.impactoExterno,
-    //     });
-    //   }
-    //   this.close();
-    // },
-    // async actualizarDat() {
-    //   try {
-    //     const datos = {
-    //       user: this.$cookies.get("dataClient").usuario.nombreUsuario,
-    //       departamentoProducto: this.editedItem.departamentoProducto,
-    //       impactoInterno: this.editedItem.impactoInterno,
-    //       impactoExterno: this.editedItem.impactoExterno,
-    //     };
-
-    //     await this.$axios.put(
-    //       `api/sgcnegocio/formularioImpactoComparativo/actualizarImpacto/${this.editedItem.id}`,
-    //       datos
-    //     );
-    //     this.guardarMod();
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // },
-
-    
-
-    // async obtenerListaEst() {
-    
-    //   try {
-    //     const res = await axios.get("api/estudiante", {
-    //       headers: {
-    //         authorization: "SGVUCE " + this.$cookies.get("ROLE_ADMIN"),
-    //       },
-    //     });
-
-    //     this.desserts = res.data;
-    //     // this.ced=this.res.data.cedula;
-    //     const bus = res.data;
-    //     bus.forEach((element) => {
-    //       this.ced.push(`${element.cedula}`);
-    //     });
-    //     console.log(this.ced);
-    //   } catch (err) {
-    //     console.log(err);
-    //     if (err.response.status == 404) {
-    //       this.$notifier.showMessage({
-    //         content: `No hay estudiantes registrados`,
-    //         color: "error",
-    //       });
-    //     } else if (err.response.status == 403) {
-    //       this.$cookies.remove("ROLE_ADMIN");
-    //       this.$notifier.showMessage({
-    //         content: `Su sesión ha expirado`,
-    //         color: "error",
-    //       });
-    //       this.$router.push("/login");
-    //     }
-    //   }
-    // },
-
     llenarTabla() {
       this.desserts.push({
         nombre: this.nombre,
         apellido: this.apellido,
-        telefono: this.telefono,
         cedula: this.cedula,
-        // correo: this.correo,
-        // fechaNacimiento: this.fechaNacimiento,
-        // carrera: this.carrera,
-        // usuario: this.usuario,
-        
-        // genero: this.genero,
+        correo: this.correo,
+
+        usuario: this.usuario,
+        telefono: this.telefono,
+        genero: this.genero,
       });
-   
     },
 
     async enviar() {
       if (
         !this.nombre ||
         !this.apellido ||
-        !this.fechaNacimiento ||
         !this.cedula ||
         !this.correo ||
-        !this.carrera ||
-        !this.semestre ||
         !this.telefono ||
-        !this.genero
+        !this.genero ||
+        !this.usuario ||
+        !this.contrasena
       ) {
         this.$notifier.showMessage({
           content: "Rellene todos los datos",
@@ -734,86 +526,84 @@ this.obtenerUsuario();
         });
       } else {
         try {
-          const res = await this.$axios.post(
-            "api/estudiante",
-            {
-              nombre: this.nombre.trim(),
-              apellido: this.apellido.trim(),
-              fechaNacimiento: this.fechaNacimiento,
-              cedula: this.cedula.trim(),
-              correo: this.correo.trim(),
-              telefono: this.telefono.trim(),
-              genero: this.genero,
-              semestre: this.semestre,
-              carrera: this.carrera,
+          const res = await this.$axios.post(`api/inPerNam/${this.facul}`, {
+            nombre: this.nombre,
+            apellido: this.apellido,
+            genero: this.genero,
+            correo: this.correo,
+            telefono: this.telefono,
 
-              esControlador: this.esControlador,
-            },
-            {
-              headers: {
-                authorization: "SGVUCE " + this.$cookies.get("ROLE_ADMIN"),
+            rol: "adminE",
+            cedula: this.cedula,
+
+            usuario: {
+              usuario: this.usuario,
+              contrasena: this.contrasena,
+              estado: true,
+              rolIdrol: {
+                id: "2",
+                rol: "adminE",
               },
             },
-
-            (this.nombre = ""),
-            (this.apellido = ""),
-            (this.fechaNacimiento = ""),
-            (this.cedula = ""),
-            (this.correo = ""),
-            (this.telefono = ""),
-            (this.genero = ""),
-            (this.semestre = ""),
-            (this.carrera = ""),
-            (this.esControlador = false)
-          );
+          });
+          this.obtenerAdminE();
           this.llenarTabla(),
+            this.limpiar(),
+            (this.id = ""),
             this.$notifier.showMessage({
               content: "Estudiante añadido con éxito",
               color: "success",
             });
-        
-        } catch (err) {
-          console.log(err);
-          if (
-            err.response.data.mensaje ==
-            "Request processing failed; nested exception is java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1"
-          ) {
-            this.$notifier.showMessage({
-              content: "Debe ingresar dos apellido",
-              color: "warning",
-            });
-          } else if (err.response.status == 500) {
-            this.$notifier.showMessage({
-              content: "Cédula o Correo Duplicados",
-              color: "warning",
-            });
-          }
-        }
+        } catch (err) {}
       }
     },
-    async campos() {
-        let cedula1=this.$cookies.get('cedula');
+    async actualizarDat() {
       try {
-        const res = await this.$axios.get(
-          `api/estudiante/buscar/${cedula1}`,
+        const datos = {
+          // user: this.$cookies.get("dataClient").usuario.nombreUsuario,
+          nombre: this.editedItem.nombre,
+          apellido: this.editedItem.apellido,
+          telefono: this.editedItem.telefono,
+          rol: "adminE",
+          cedula: this.editedItem.cedula,
+          genero: this.editedItem.genero,
+          correo: this.editedItem.correo,
+        };
 
-          {
-            headers: {
-              authorization: "SGVUCE " + this.$cookies.get("ROLE_ADMIN"),
-            },
-          }
-          
+        await this.$axios.put(`api/updatePersona/${this.editedItem.id}`, datos);
+
+        // this.guardarMod();
+        this.obtenerAdminE();
+        this.close();
+        this.$notifier.showMessage({
+          content: "Se editó con éxito",
+          color: "success",
+        });
+      } catch (err) {
+        this.$notifier.showMessage({
+          content: "Error al editar",
+          color: "error",
+        });
+        this.close();
+      }
+    },
+    async estadoAdminE() {
+      try {
+        const resp = await this.$axios.put(
+          `api/desactivarUsuario/${this.editedItem.usuario.id}`
         );
-   
-        console.log(res.data)
-             if(res.data==true){
-           this.$notifier.showMessage({
-              content: "Cédula o Correo Duplicados",
-              color: "warning",
-            });
-        }
-       
-      } catch (err) {}
+        this.deleteItemConfirm();
+        this.obtenerAdminE();
+        this.$notifier.showMessage({
+          content: `Estado actualizado`,
+          color: "success",
+        });
+      } catch (err) {
+        this.$notifier.showMessage({
+          content: `Error al actualizar estado`,
+          color: "error",
+        });
+      }
     },
   },
 };

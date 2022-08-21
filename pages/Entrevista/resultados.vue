@@ -1,20 +1,22 @@
 <template>
   <v-card>
     <v-responsive :aspect-ratio="16 / 9">
-   
-      <img class="imagen" src="/ingresoDatos.svg" style="margin-top:30px" />
-
+     
+      <!-- <img class="imagen" src="/ingresoDatos.svg" style="margin-top:30px" /> -->
+      <div class="container">
+    
+      </div>
 
       <v-layout align-start>
         <v-flex>
-          <!-- Tabla con la lista de Facultades y sus carreras -->
+          
           <v-data-table
             :headers="headers"
             :items="desserts"
             :search="search"
             class="elevation-1"
           >
-            <template v-slot:top>
+       <template v-slot:top>
               <v-toolbar flat>
                 <v-toolbar-title>Resultados</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
@@ -29,35 +31,121 @@
                 >
                 </v-text-field>
                 <v-spacer></v-spacer>
+                <!-- //DIALOGO DE EDITAR Trabajadores -->
                 <v-dialog v-model="dialog" max-width="500px">
                   <v-card>
-                    <v-card-title>
-                      <!-- <span class="text-h5">{{ formTitle }}</span> -->
-                    </v-card-title>
-
                     <v-card-text>
                       <v-container>
                         <v-row>
                           <v-col cols="12" sm="6" md="6">
                             <v-text-field
                               v-model="nombre"
-                              label="Empresa"
+                              label="nombre"
                               :rules="[() => !!nombre || 'Campo obligatorio']"
                             ></v-text-field>
                           </v-col>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              v-model="apellido"
+                              label="apellido"
+                              :rules="[
+                                () => !!apellido || 'Campo obligatorio',
+                              ]"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              v-model="cedula"
+                              :rules="[
+                                rules.ced,
+                                rules.counter,
+                                rules.required,
+                                rules.ced,
+                              ]"
+                              counter
+                              maxlength="10"
+                              color="primary"
+                              label="Cédula"
+                            ></v-text-field>
+                          </v-col>
+                          <!-- <v-col cols="12" sm="6" md="6"> -->
+                            <!-- <v-text-field
+                              v-model="fechaNacimiento"
+                              label="Fecha de Nacimiento"
+                              type="date"
+                              :rules="[
+                                () => !!fechaNacimiento || 'Campo obligatorio',
+                              ]"
+                            ></v-text-field>
+                          </v-col> -->
+                          <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              v-model="correo"
+                              label="Correo electrónico"
+                              :rules="[rules.email, rules.required]"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              v-model="telefono"
+                              label="Teléfono"
+                              :rules="[
+                                rules.tel,
+                                rules.counter,
+                                rules.required,
+                              ]"
+                              counter
+                              maxlength="10"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-select
+                              :items="generos"
+                              label="Género"
+                              v-model="genero"
+                              :rules="[() => !!genero || 'Campo obligatorio']"
+                            ></v-select>
+                          </v-col>
+                          <!-- <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              v-model="semestre"
+                              label="Semestre"
+                              type="number"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-select
+                              v-model="carrera"
+                              label="Carrera"
+                             
+                            ></v-select>
+                          </v-col> -->
                         </v-row>
                       </v-container>
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text> Cancelar </v-btn>
+                      <v-btn color="blue darken-1" text @click="close">
+                        Cancelar
+                      </v-btn>
 
                       <v-btn color="blue darken-1" text> Editar </v-btn>
                     </v-card-actions>
-                             <v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <v-dialog v-model="dialogDelete" max-width="500px">
+                  <v-card>
+                    <v-card-title class="text-h7"
+                      >¿Estás seguro que deseas borrar el
+                      registro?</v-card-title
+                    >
+                    <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="iniciarEntrevista"> entrevista </v-btn>
-
+                      <v-btn color="blue darken-1" text @click="closeDelete"
+                        >Cancelar</v-btn
+                      >
+                      <v-btn color="blue darken-1" text>Aceptar</v-btn>
+                      <v-spacer></v-spacer>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -138,8 +226,8 @@ export default {
           value: "apellidos",
         },
         {
-          text: "Fecha",
-          value: "fecha",
+          text: "Cédula",
+          value: "cedula",
           sortable: true,
         },
         // {
@@ -147,10 +235,35 @@ export default {
         //   value: "fechaNacimiento",
         // },
         {
-          text: "Archivo",
-          value: "archivo",
+          text: "Género",
+          value: "genero",
         },
-       
+        {
+          text: "Correo",
+          value: "correo",
+        },
+        {
+          text: "Teléfono",
+          value: "telefono",
+        },
+        // {
+        //   text: "Carrera",
+        //   value: "carrera",
+        // },
+
+        {
+          text: "Usuario",
+          value: "usuario",
+        },
+             {
+          text: "Estado",
+          value: "estado",
+        },
+            {
+          
+          value: "actions",
+         
+        },
          { text: "Acciones", value: "actions", sortable: false },
       ],
       search: "",
@@ -170,9 +283,10 @@ export default {
     };
   },
   mounted() {
-    this.obtenerListaEst();
-    this.obtenerFac();
+    // this.obtenerListaEst();
+    // this.obtenerFac();
     // this.campos();
+    this.obtenerPost();
   },
   computed: {
     formTitle() {
@@ -376,94 +490,56 @@ window.location.href="/Entrevista/Entrevista"
     //   }
     // },
 
-    async obtenerFac() {
-      this.listaFacultades.slice();
+  
+
+    async obtenerPsic() {
       try {
-        const res = await axios.get("api/facultad", {
-          headers: {
-            authorization: "SGVUCE " + this.$cookies.get("ROLE_ADMIN"),
-          },
-        });
-        // console.log(res);
+        const res = await axios.get("/api/personaRlEm/post/74");
 
         const lis = res.data;
-
-        lis.forEach((facu) => {
-          this.listaFacultades.push(`${facu.nombre}`);
-        });
-        this.prueba = res.data;
-      } catch (err) {
-        console.log(err);
-        if (err.response.status == 403) {
-          this.$cookies.remove("ROLE_ADMIN");
-          this.$notifier.showMessage({
-            content: `Su sesión ha expirado`,
-            color: "error",
-          });
-          this.$router.push("/login");
-        }
-      }
-    },
-
-    async obtenerListaEst() {
-      try {
-        const res = await axios.get("api/estudiante", {
-          headers: {
-            authorization: "SGVUCE " + this.$cookies.get("ROLE_ADMIN"),
-          },
+        console.log(lis);
+        lis.forEach((element) => {
+          if (element.usuario.estado == true) {
+            element.usuario.estado = "Activo";
+          } else {
+            element.usuario.estado = "Inactivo";
+          }
+          this.desserts = res.data;
         });
 
         this.desserts = res.data;
-        // this.ced=this.res.data.cedula;
-        const bus = res.data;
-        bus.forEach((element) => {
-          this.ced.push(`${element.cedula}`);
-        });
-        console.log(this.ced);
+     
+
+        //  this.llenarTabla();
       } catch (err) {
         console.log(err);
-        if (err.response.status == 404) {
-          this.$notifier.showMessage({
-            content: `No hay estudiantes registrados`,
-            color: "error",
-          });
-        } else if (err.response.status == 403) {
-          this.$cookies.remove("ROLE_ADMIN");
-          this.$notifier.showMessage({
-            content: `Su sesión ha expirado`,
-            color: "error",
-          });
-          this.$router.push("/login");
-        }
       }
     },
 
     llenarTabla() {
-      this.desserts.push({
-        nombres: this.nombres,
-        apellidos: this.apellidos,
+         this.desserts.push({
+        nombre: this.nombre,
+        apellido: this.apellido,
         cedula: this.cedula,
         correo: this.correo,
-        fechaNacimiento: this.fechaNacimiento,
-        carrera: this.carrera,
+
         usuario: this.usuario,
         telefono: this.telefono,
         genero: this.genero,
       });
-      this.obtenerListaEst();
+      this.obtenerPsic();
     },
 
-    async enviar() {
+    async agregarPost() {
       if (
-        !this.nombres ||
-        !this.apellidos ||
-        !this.fechaNacimiento ||
+       !this.nombre ||
+        !this.apellido ||
         !this.cedula ||
         !this.correo ||
-        !this.carrera ||
-        !this.semestre ||
         !this.telefono ||
-        !this.genero
+        !this.genero ||
+        !this.usuario ||
+        !this.contrasena
       ) {
         this.$notifier.showMessage({
           content: "Rellene todos los datos",
@@ -471,41 +547,28 @@ window.location.href="/Entrevista/Entrevista"
         });
       } else {
         try {
-          const res = await this.$axios.post(
-            "api/estudiante",
+      const res = await this.$axios.post(
+            "api/insertPersona/74",
             {
-              nombres: this.nombres.trim(),
-              apellidos: this.apellidos.trim(),
-              fechaNacimiento: this.fechaNacimiento,
-              cedula: this.cedula.trim(),
-              correo: this.correo.trim(),
-              telefono: this.telefono.trim(),
+              nombre: this.nombre,
+              apellido: this.apellido,
+              telefono: this.telefono,
+              rol: "post",
+              cedula: this.cedula,
               genero: this.genero,
-              semestre: this.semestre,
-              carrera: this.carrera,
-
-              esControlador: this.esControlador,
-            },
-            {
-              headers: {
-                authorization: "SGVUCE " + this.$cookies.get("ROLE_ADMIN"),
+              correo: this.correo,
+              usuario: {
+                usuario: this.usuario,
+                contrasena: this.contrasena,
+                estado: true,
               },
             },
 
-            (this.nombres = ""),
-            (this.apellidos = ""),
-            (this.fechaNacimiento = ""),
-            (this.cedula = ""),
-            (this.correo = ""),
-            (this.telefono = ""),
-            (this.genero = ""),
-            (this.semestre = ""),
-            (this.carrera = ""),
-            (this.esControlador = false)
+      
           );
           this.llenarTabla(),
             this.$notifier.showMessage({
-              content: "Estudiante añadido con éxito",
+              content: "Postulante añadido con éxito",
               color: "success",
             });
         } catch (err) {

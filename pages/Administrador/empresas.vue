@@ -8,8 +8,8 @@
       <div class="container">
         <v-row align="center" justify="center">
           <v-col cols="12" sm="15" md="8">
-            <v-card-text class="elevation-12" id="card-in">
-              <v-form ref="form" v-model="form">
+            <v-card-text class="elevation-12" id="card-in" >
+              <v-form ref="form" v-model="form" >
                 <p>Ingrese los datos de la empresa:</p>
                 <v-text-field
                   ref="empresa"
@@ -28,7 +28,7 @@
                   outlined
                   rounded
                   v-model="telefono"
-                  :rules="[rules.tel, rules.counter]"
+                  :rules="[ rules.tel]"
                   maxlength="10"
                   type="text"
                   color="primary"
@@ -37,7 +37,7 @@
               </v-form>
             </v-card-text>
 
-            <v-btn id="btn-ingreso" color="secondary" @click="agregarEmpr">
+            <v-btn id="btn-ingreso" color="secondary" @click="agregarEmpr" :disabled="!form">
               Agregar Empresa
             </v-btn>
           </v-col>
@@ -73,9 +73,12 @@
                     <v-card-title> </v-card-title>
 
                     <v-card-text>
+                       <form ref="valid">
                       <v-container>
+                       
                         <v-row>
                           <v-col cols="12" sm="6" md="6">
+                            
                             <v-text-field
                               v-model="editedItem.nombreempresa"
                               label="Empresa"
@@ -88,12 +91,15 @@
                             <v-text-field
                               v-model="editedItem.telefono"
                               label="Teléfono"
-                              :rules="[rules.tel, rules.counter]"
+                              :rules="[rules.tel]"
                               maxlength="10"
                             ></v-text-field>
+                            
                           </v-col>
                         </v-row>
+                        
                       </v-container>
+                      </form>
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
@@ -176,21 +182,12 @@ export default {
       rules: {
         required: (value) => !!value || "Campo Requerido.",
 
-        counter: (value) => value.length == 10 || "Se requiere 10 dígitos",
-        ced: (value) => {
-          const pattern = /^[0-9]*$/;
-          return pattern.test(value) || "Solo números";
-        },
+        count: (value) => value.length >= 10 || "Se requiere 10 dígitos",
+
         tel: (value) => {
           const pattern = /^([0])+(9)+([0-9])*$/;
           return pattern.test(value) || "No es un número telefónico válido";
         },
-        email: (value) => {
-          const pattern =
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-          return pattern.test(value) || "No es un correo válido.";
-        },
-        cedula: (value) => this.validar(value) || "Cédula inválida",
       },
       headers: [
         {
@@ -218,7 +215,7 @@ export default {
 
   methods: {
     limpiar() {
-      (this.nombreempresa = ""), (this.telefono = "");
+      (this.nombreempresa = ""), (this.telefono = ""), this.$refs.form.reset();
       this.obtenerListaEmpr();
     },
     getColor(value) {
@@ -369,7 +366,7 @@ export default {
           `api/empresaEs/${this.editedItem.id}`
         );
         this.deleteItemConfirm();
-
+        this.obtenerListaEmpr();
         this.$notifier.showMessage({
           content: `Estado actualizado`,
           color: "success",
