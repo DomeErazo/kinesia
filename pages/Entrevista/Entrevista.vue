@@ -1,59 +1,59 @@
 <template>
-<v-responsive :aspect-ratio="16 / 9">
-  <div>
-    <v-card class="mx-auto" tile>
-      <v-row
-        class="text-md-center"
-        style="
-          height: 100px;
-          background-color: #8ea6ae;
-          margin-left: 15px;
-          margin-right: 15px;
-          margin-top: 15px;
-        "
-      >
-        <v-col cols="2"></v-col>
-        <v-col cols="8">
-          <h1
-            style="
-              color: white;
+  <v-responsive :aspect-ratio="16 / 9">
+    <div>
+      <v-card class="mx-auto" tile>
+        <v-row
+          class="text-md-center"
+          style="
+            height: 100px;
+            background-color: #8ea6ae;
+            margin-left: 15px;
+            margin-right: 15px;
+            margin-top: 15px;
+          "
+        >
+          <v-col cols="2"></v-col>
+          <v-col cols="8">
+            <h1
+              style="
+                color: white;
 
-              font-size: 50px;
-            "
-            class="text-md-center"
-          >
-            Entrevista
-          </h1>
-        </v-col>
-        <v-col cols="2"></v-col>
-      </v-row>
-    </v-card>
+                font-size: 50px;
+              "
+              class="text-md-center"
+            >
+              Entrevista
+            </h1>
+          </v-col>
+          <v-col cols="2"></v-col>
+        </v-row>
+      </v-card>
 
-    <v-card class="text-center">
-      <v-card-text>
-        <video
-          id="video"
-          playsinline
-          autoplay
-          style="width: 300px; height: 300px"
-        ></video>
-        <!-- <v-btn :disabled="isPlaying" @click="play">Play</v-btn>
+      <v-card class="text-center">
+        <v-card-text>
+          <video
+            id="video"
+            playsinline
+            autoplay
+            style="width: 300px; height: 300px"
+          ></video>
+          <!-- <v-btn :disabled="isPlaying" @click="play">Play</v-btn>
       <v-btn :disabled="!isPlaying" @click="stop">Stop</v-btn> -->
-        <!-- <v-btn class="primary mb-2" block id="cambiar-camara" @click="cambiarCamara()"><v-icon>mdi-camera-party-mode</v-icon>Cambiar camara</v-btn> -->
-        <!-- AQUI TOMA LA CAPTURA -->
-        <canvas
-          id="canvas"
-          width="400"
-          height="400"
-          style="max-width: 100%"
-          hidden
-          >canvas</canvas
-        >
-        <!-- AQUI SE ESTA GUARDANDO LA CAPTURA DEL CANVAS-->
-        <canvas v-show="false" id="otrocanvas" width="300" height="300"
-          >otrocanvas</canvas
-        >
-        <!-- <img
+          <!-- <v-btn class="primary mb-2" block id="cambiar-camara" @click="cambiarCamara()"><v-icon>mdi-camera-party-mode</v-icon>Cambiar camara</v-btn> -->
+          <!-- AQUI TOMA LA CAPTURA -->
+          <canvas
+            id="canvas"
+            width="400"
+            height="400"
+            style="max-width: 100%"
+            hidden
+            >canvas</canvas
+          >
+          <!-- AQUI SE ESTA GUARDANDO LA CAPTURA DEL CANVAS-->
+          <canvas v-show="false" id="otrocanvas" width="300" height="300"
+            >otrocanvas</canvas
+          >
+          <!-- <img
           src=""
           id="photo"
           alt="photo"
@@ -61,15 +61,54 @@
           height="300"
           name="imagen"
         /> -->
-        <!-- <v-btn id="startbutton" @click="takePicture">Take</v-btn> -->
-        <!-- <p class="text-h5 text-center black--text">- {{ this.prediction }}</p> -->
-        <div id="resul" style="font-size: 25px"></div>
-        <v-btn color="primary" @click="guardarEntrevista">Finalizar</v-btn>
-      </v-card-text>
-    </v-card>
-    <!-- </v-col> -->
-    <!-- </v-row> -->
-  </div>
+          <!-- <v-btn id="startbutton" @click="takePicture">Take</v-btn> -->
+          <!-- <p class="text-h5 text-center black--text">- {{ this.prediction }}</p> -->
+          <div id="resul" style="font-size: 25px"></div>
+
+          <v-btn color="primary" @click="abrirDialog">Finalizar</v-btn>
+        </v-card-text>
+      </v-card>
+      <v-dialog v-model="dialog" max-width="750px">
+        <v-card
+          >
+           <v-list-item three-line>
+      <v-list-item-content>
+      
+        <v-list-item-title class="text-h5 mb-1">
+        Tu entrevista ha finalizado con éxito
+        </v-list-item-title>
+        <v-spacer></v-spacer>
+        <v-list-item-subtitle>A continuación tus resultados serán entregados al entrevistador a
+            cargo, si haz sido favorecido te estaremos informando para que
+            formes parte de nuestro equipo</v-list-item-subtitle>
+             <h5>Gracias por tu colaboración</h5>
+      </v-list-item-content>
+
+      <v-list-item-avatar size="100">
+             <img src="/k-logo.png"/>
+      </v-list-item-avatar>
+   
+    </v-list-item>
+
+    <v-card-actions>
+      <v-btn
+        outlined
+        rounded
+        text
+        @click="enviarResults"
+      >
+        Continuar
+      </v-btn>
+    </v-card-actions>
+       
+         
+          
+             </v-card
+        >
+      </v-dialog>
+      <!-- </v-col> -->
+      <!-- </v-row> -->
+    </div>
   </v-responsive>
 </template>
 <script>
@@ -85,6 +124,7 @@ export default {
       facingMode: "user",
       tamano: 100,
       currentStream: undefined,
+      dialog: false,
       video: undefined,
       photo: undefined,
       photo: undefined,
@@ -129,54 +169,10 @@ export default {
       const imagen = document.imagen;
       // this.predecir();
     },
-   async guardarEntrevista() {
-      // try {
-          const hoy=new Date();
-      const dia=hoy.getDate();
-      const mes=hoy.getMonth()+1;
-      const ano=hoy.getFullYear()
-const fechaEntrevista=`${ano}/${mes}/${dia}`;
-       
-      //   const res = await this.$axios.post(`api/entrevistain`, {
-      //     //creo que no debe mandar el usuario o usuario y contrasena deben ser null, rol debe ser post, nombre empresa, telefono no deben ser null, falta genero y correo
-      //     nombreEntrevistador: "dome",
-      //     gestos: "prueba",
-      //     personaIdpersona: {
-      //       id:"374",
-      //       nombre: "this.nombre",
-      //       apellido: "this.apellido",
-      //       telefono: "this.telefono",
-      //       rol: "post",
-      //       cedula: "this.cedula",
-      //       empresa: {
-      //         id: "4",
-      //         nombreempresa: "null",
-      //         telefono: "null",
-      //         estado: true,
-      //       },
-      //     },
-      //     usuario: {
-      //       id: "434",
-      //       usuario: "",
-      //       contrasena: "",
-      //       estado: true,
-      //       rolIdrol: {
-      //         id: "4",
-      //         rol: "post",
-      //       },
-      //     },
-      //     fechaEntrevista: Date.now(),
- 
-      //     // genero: this.genero,
-      //     // correo: this.correo,
-      //   });
-    
-         window.location.href = "/Entrevista/listaPost";
-      this.video.pause();
-      // } catch (error) {}
-    
-     
+    abrirDialog() {
+      this.dialog = true;
     },
+  
     procesarCamara() {
       this.ctx.drawImage(this.video, 0, 0, 400, 400, 0, 0, 400, 400);
       setTimeout(this.procesarCamara, 20);
@@ -359,6 +355,11 @@ const fechaEntrevista=`${ano}/${mes}/${dia}`;
       }
       ctx2.putImageData(img2, 0, 0);
     },
+    async enviarResults(){
+      this.video.pause();
+      window.location.href="/Entrevista/listaPost"
+
+    }
   },
 };
 </script>

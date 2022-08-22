@@ -146,7 +146,9 @@ export default {
 
   methods: {
     async logout() {
+     
       this.$router.push("/login");
+      //  this.$cookies.remove('dataClient')
     },
   },
 };

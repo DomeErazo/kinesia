@@ -86,19 +86,19 @@
                 margin-top: 25px;
               "
             >
-              <v-col><img src="/3.svg" width="100%" /></v-col>
+              <v-col><img src="/3.svg" width="70%" /></v-col>
               <v-col cols="9">
                 <h1 style="color: #6264aa; margin-top: 30px">
                   3. Actúa con naturalidad
                 </h1>
                 <p>
                   Es cierto que el tener que dirigirte a la cámara en muchas
-                  ocasiones puede resultar incómodo, sin embargo, te recomendamos
-                  actuar con la mayor naturalidad posible ya que serán rasgos
-                  que puedan afectar al resultado final. No te preocupes que la
-                  entrevista no será grabada, por lo que una vez terminado este
-                  proceso los únicos datos registrados serán los de tu análisis
-                  psicológico
+                  ocasiones puede resultar incómodo, sin embargo, te
+                  recomendamos actuar con la mayor naturalidad posible ya que
+                  serán rasgos que puedan afectar al resultado final. No te
+                  preocupes que la entrevista no será grabada, por lo que una
+                  vez terminado este proceso los únicos datos registrados serán
+                  los de tu análisis psicológico
                 </p>
               </v-col>
             </v-row>
@@ -123,38 +123,27 @@
               </v-col>
               <v-col><img src="/4.svg" width="100%" /></v-col>
             </v-row>
-             <v-row
+            <v-row
               class="text-md-center"
-              style="
-               
-                margin-left: 15px;
-                margin-right: 15px;
-                margin-top: 25px;
-              "
+              style="margin-left: 15px; margin-right: 15px; margin-top: 25px"
             >
-           
-              <v-col >
-                
+              <v-col>
                 <p>
-                 Si estás de acuerdo con todos los puntos explicados por el entrevistador y escritos anteriormente, por favor haz click en "continuar" y empezaremos con la entrevista. ¡Éxito!
+                  Si estás de acuerdo con todos los puntos explicados por el
+                  entrevistador y escritos anteriormente, por favor haz click en
+                  "continuar" y empezaremos con la entrevista. ¡Éxito!
                 </p>
-            
               </v-col>
-             
             </v-row>
-                 <v-row
+            <v-row
               class="text-md-center"
-              style="
-                
-                margin-left: 15px;
-                margin-right: 15px;
-                margin-bottom: 25px;
-              "
+              style="margin-left: 15px; margin-right: 15px; margin-bottom: 25px"
             >
-           <v-col cols="5"></v-col>
+              <v-col cols="5"></v-col>
               <v-col cols="2">
-               
-                <v-btn color="primary" @click="iniciarEntrevista"> Continuar</v-btn>
+                <v-btn color="primary" @click="guardarEntrevista">
+                  Continuar</v-btn
+                >
               </v-col>
               <v-col cols="5"></v-col>
             </v-row>
@@ -170,13 +159,42 @@ import axios from "axios";
 export default {
   layout: "entrevista",
   data() {
-    return {};
+    return {
+      cedula:"",
+      nombre:"",
+      apellido:"",
+    };
   },
-  methods:{
-      iniciarEntrevista() {
+  methods: {
+    //   iniciarEntrevista() {
+    //   
+    // },
+    async guardarEntrevista() {
+      // try {
+      const hoy = new Date();
+      // const dia = hoy.getDate();
+      // const mes = hoy.getMonth() + 1;
+      // const ano = hoy.getFullYear();
+      // const fechaEntrevista = `${ano}-${mes}-${dia}`;
+      const fechaEntrevista=hoy;
+
+      let ced = this.$cookies.get("postUs").cedula;
+      let entre = this.$cookies.get("dataClient").nombre;
+      let enteA = this.$cookies.get("dataClient").apellido;
+      try {
+          const res = await this.$axios.post(`api/entrevistaPst?cedula=${ced}`, {
+        nombreEntrevistador: entre +" "+ enteA,
+        gestos: null,
+        fechaEntrevista: fechaEntrevista,
+      });
       window.location.href = "/Entrevista/Entrevista";
+      } catch (error) {
+        
+      }
+
+
     },
-  }
+  },
 };
 </script>
 <style >

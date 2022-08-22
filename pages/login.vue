@@ -44,7 +44,7 @@
                           label="Contraseña"
                           name="contrasena"
                           v-model="contrasena"
-                          type="contrasena"
+                          type="password"
                           color="secondary"
                           style="width:200px; margin-left: 30%;"
                         
@@ -88,35 +88,43 @@ export default {
   methods: {
  async enviar() { 
       try {
-        const respuesta = await this.$axios.post(`https://kinterviewbackmineria.herokuapp.com/mineria/login`, {
-          usuario: this.usuario,
-          contrasena: this.contrasena
-        })
+     
+        const respuesta = await this.$axios.get(`https://kinterviewbackmineria.herokuapp.com/mineria/login?usN=${this.usuario}&cl=${this.contrasena}`
+         );
         console.log(respuesta.data)
-        if (!respuesta.data && !respuesta.data.nombre) {
-          this.alert = true
-          this.usuario = ''
-          this.contra = ''
+        // if (!respuesta.data && !respuesta.data.nombre) {
+        //   this.alert = true
+        //   this.usuario = ''
+        //   this.contra = ''
   
-        } else {
-          this.$store.commit('session/logIn', respuesta.data)
-          this.alert = false
-          let type = respuesta.data.usuario.rol
-
-          if(type === "admi"){
-            this.$router.push('/Administador/inicio')
+        // } else {
+        //   this.$store.commit('session/logIn', respuesta.data)
+        //   this.alert = false
+          let type = respuesta.data.rol
+this.$store.commit('session/logIn', respuesta.data)
+        this.alert = false
+          if(type === "admin"){
+            this.$router.push('/Administrador/inicio')
           }else if(type === "adminE") {
             this.$router.push('/AdministradorEmpresarial/inicio')
           } else if(type === "psico"){
             this.$router.push('/Entrevista/inicio')
+          }else  {
+            this.$cookies.remove('dataClient')
+            
+         this.usuario = ''
+         this.contrasena = ''
+         this.$notifier.showMessage({
+            content: "Corrija los campos del formulario para continuar",
+            color: "success",
+          });
           }
 
           
     
-        }
+        // }
       } catch (err) {
-        console.log(err)
-        console.log("entro")
+ 
          this.usuario = ''
          this.contrasena = ''
          this.$notifier.showMessage({

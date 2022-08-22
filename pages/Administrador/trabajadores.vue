@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-responsive :aspect-ratio="16 / 9">
-      <img class="imagen" src="/trabajadores.svg" />
+      <img class="imagen" src="/trabajadores.svg" style="width:250px"/>
       <div class="container">
         <v-row align="center" justify="center">
           <v-col cols="12" sm="15" md="8">
@@ -482,7 +482,6 @@ export default {
       } catch (err) {}
     },
     async obtenerListaEmpr() {
-      // let user = this.$cookies.get("dataClient").usuario.usuario;
       try {
         const res = await this.$axios.get("/api/empresa");
 
@@ -569,7 +568,6 @@ export default {
     async actualizarDat() {
       try {
         const datos = {
-          // user: this.$cookies.get("dataClient").usuario.nombreUsuario,
           nombre: this.editedItem.nombre,
           apellido: this.editedItem.apellido,
           telefono: this.editedItem.telefono,

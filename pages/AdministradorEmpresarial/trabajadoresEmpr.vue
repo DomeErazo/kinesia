@@ -435,9 +435,9 @@ export default {
       });
     },
     async obtenerPsic() {
-      //FALTA CAPTURAR EL NOMBRE DE LA EMPRESA
+      let Nempresa= this.$cookies.get("dataClient").empresa.nombreempresa;
       try {
-        const res = await axios.get(`/api/personaRlEm/psico/toxicosgroupSADO`);
+        const res = await axios.get(`/api/personaRlEm/psico/${Nempresa}`);
         const lis = res.data;
        
 
@@ -487,8 +487,9 @@ export default {
         });
       } else {
         try {
-          //FALTA CAPTURAR EMPRESA
-          const res = await this.$axios.post(`api/insertPersona/4`, {
+         let Iempresa= this.$cookies.get("dataClient").empresa.id;
+       
+          const res = await this.$axios.post(`api/insertPersona/${Iempresa}`, {
             nombre: this.nombre,
             apellido: this.apellido,
             genero: this.genero,
@@ -524,7 +525,6 @@ export default {
      async actualizarDat() {
       try {
         const datos = {
-          // user: this.$cookies.get("dataClient").usuario.nombreUsuario,
           nombre: this.editedItem.nombre,
           apellido: this.editedItem.apellido,
           telefono: this.editedItem.telefono,

@@ -256,11 +256,7 @@ export default {
           value: "personaIdoersona.telefono",
         },
 
-        {
-          text: "Usuario",
-          value: "personaIdoersona.usuario.usuario",
-        },
-
+ 
         { value: "actions", sortable: false },
       ],
       search: "",
@@ -341,12 +337,14 @@ export default {
       window.location.href = "/Entrevista/Entrevista";
     },
     async obtenerPost() {
+      let Npsic = this.$cookies.get("dataClient").nombre;
+      let Apsic = this.$cookies.get("dataClient").apellido;
       //FALTA CAPTURAR EL NOMBRE DEL PSICOLOGO
+
       try {
-        const res = await axios.get(`/api/entrevistaLi/dome
+        const res = await axios.get(`/api/entrevistaLi/${Npsic + " "+Apsic}
         `);
         const lis = res.data;
-        console.log(lis);
         console.log(lis);
 
         this.desserts = res.data;
@@ -371,7 +369,7 @@ export default {
     async actualizarDat() {
       try {
         const datos = {
-          // user: this.$cookies.get("dataClient").usuario.nombreUsuario,
+          // 
           nombre: this.editedItem.personaIdoersona.nombre,
           apellido: this.editedItem.personaIdoersona.apellido,
           telefono: this.editedItem.personaIdoersona.telefono,
@@ -381,7 +379,7 @@ export default {
           correo: this.editedItem.personaIdoersona.correo,
         };
 
-        await this.$axios.put(`api/updatePersona/${this.editedItem.id}`, datos);
+        await this.$axios.put(`api/updatePersona/${this.editedItem.personaIdoersona.id}`, datos);
 
         this.obtenerPost();
         this.close();
@@ -401,9 +399,11 @@ export default {
       this.dialogResult = true;
     },
     async resultadosPDF() {
+      let idEnt = this.$cookies.get("dataClient").nombre;
       try {
-        const resp = await axios.get(`/api/informe/print/1`);
-        window.open("/api/informe/print/1");
+        
+        const resp = await axios.get(`/api/informe/print/${this.editedItem.id}`);
+        window.open(`/api/informe/print/${this.editedItem.id}`);
         console.log(resp);
         this.close();
 

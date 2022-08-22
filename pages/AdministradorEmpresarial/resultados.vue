@@ -339,9 +339,10 @@ export default {
       window.location.href = "/Entrevista/Entrevista";
     },
     async obtenerPost() {
-      //FALTA CAPTURAR EL NOMBRE DE LA EMPRESA
+       let Nempresa= this.$cookies.get("dataClient").empresa.nombreempresa;
+   
       try {
-        const res = await axios.get(`/api/entrevistaEm/cambio
+        const res = await axios.get(`/api/entrevistaEm/${Nempresa}
         `);
         const lis = res.data;
     
@@ -385,8 +386,9 @@ export default {
     },
     async resultadosPDF() {
       try {
-        const resp = await axios.get(`/api/informe/print/1`);
-        window.open("/api/informe/print/1");
+        //TRAER EL ID DE SABE DIOS QUE
+        const resp = await axios.get(`/api/informe/print/${this.editedItem.id}`);
+        window.open(`/api/informe/print/${this.editedItem.id}`);
         console.log(resp);
         this.close();
 

@@ -22,9 +22,9 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/k-logo.ico' }
     ]
   },
-  // router: {
-  //   middleware: 'auth'
-  // },
+  router: {
+    middleware: 'auth'
+  },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],

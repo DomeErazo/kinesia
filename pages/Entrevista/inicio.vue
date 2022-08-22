@@ -238,8 +238,9 @@ dialog:false,
         });
         this.dialog=false
       } else {
+        let Nempresa = this.$cookies.get("dataClient").empresa.nombreempresa;
         try {
-          const res = await this.$axios.post(`api/inPerNam/toxicosgroupSADO`, {
+          const res = await this.$axios.post(`api/inPerNam/${Nempresa}`, {
             nombre: this.nombre,
             apellido: this.apellido,
             genero: this.genero,
@@ -263,6 +264,7 @@ dialog:false,
        this.limpiar();
       
             this.dialog=true;
+            this.$cookies.set('postUs', res.data)
         } catch (err) {
             this.$notifier.showMessage({
               content: "Asegúrese que la cédula sea única",

@@ -7,7 +7,7 @@
       <img
         class="imagen"
         src="/empresa.svg"
-        style="width: 300px; text-align: center"
+        style="width: 250px; text-align: center"
       />
       <div class="container">
         <v-row align="center" justify="center">
@@ -276,7 +276,6 @@ export default {
       });
     },
     async obtenerListaEmpr() {
-      // let user = this.$cookies.get("dataClient").usuario.usuario;
       try {
         const res = await this.$axios.get("/api/empresa");
 
@@ -305,8 +304,6 @@ export default {
         });
       } else {
         try {
-          // let usuario = this.$cookies.get("dataClient").usuario.usuario;
-
           await this.$axios.post("/api/empresaIS", {
             nombreempresa: this.nombreempresa,
             telefono: this.telefono,
@@ -331,7 +328,6 @@ export default {
     async actualizarDat() {
       try {
         const datos = {
-          // user: this.$cookies.get("dataClient").usuario.nombreUsuario,
           nombreempresa: this.editedItem.nombreempresa,
           telefono: this.editedItem.telefono,
         };
@@ -354,7 +350,6 @@ export default {
     async estadoEmpresa() {
       try {
         const datos = {
-          // user: this.$cookies.get("dataClient").usuario.nombreUsuario,
           id: this.editedItem.id,
           nombreempresa: this.editedItem.nombreempresa,
           telefono: this.editedItem.telefono,
