@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main class="fondo">
-          <v-container class="fill-height" fluid>
+      <v-container class="fill-height" fluid>
         <v-row aling="center" justify="center">
           <v-col cols="12" sm="8" md="8">
             <v-card class="elevation-12">
@@ -20,16 +20,22 @@
                     md="6"
                     lg="6"
                   >
-                                       <img class="imagen" src="entrevista.svg" style="max-height:300px; margin-top: 15px;"/>
-
+                    <img
+                      class="imagen"
+                      src="entrevista.svg"
+                      style="max-height: 300px; margin-top: 15px"
+                    />
                   </v-col>
                   <v-col cols="12" sm="12" md="6" lg="6">
                     <v-card-text
                       class="d-flex flex-column justify-space-around"
                     >
-   
-                       <img class="imagen" src="kinesiatitulo.jpg" style="max-height:150px"/>
-                        
+                      <img
+                        class="imagen"
+                        src="kinesiatitulo.jpg"
+                        style="max-height: 150px"
+                      />
+
                       <v-form>
                         <v-text-field
                           label="Usuario"
@@ -37,7 +43,7 @@
                           v-model="usuario"
                           type="text"
                           color="secondary"
-                          style="width:200px; margin-left: 30%;"
+                          style="width: 200px; margin-left: 30%"
                         />
                         <v-text-field
                           id="Contraseña"
@@ -46,8 +52,7 @@
                           v-model="contrasena"
                           type="password"
                           color="secondary"
-                          style="width:200px; margin-left: 30%;"
-                        
+                          style="width: 200px; margin-left: 30%"
                         />
                       </v-form>
 
@@ -75,64 +80,59 @@
 <script>
 import axios from "axios";
 export default {
- 
   layout: "login",
   data() {
     return {
-    
       usuario: "",
       contrasena: "",
-     
     };
   },
-  methods: {
- async enviar() { 
-      try {
-     
-        const respuesta = await this.$axios.get(`https://kinterviewbackmineria.herokuapp.com/mineria/login?usN=${this.usuario}&cl=${this.contrasena}`
-         );
-        console.log(respuesta.data)
-        // if (!respuesta.data && !respuesta.data.nombre) {
-        //   this.alert = true
-        //   this.usuario = ''
-        //   this.contra = ''
-  
-        // } else {
-        //   this.$store.commit('session/logIn', respuesta.data)
-        //   this.alert = false
-          let type = respuesta.data.rol
-this.$store.commit('session/logIn', respuesta.data)
-        this.alert = false
-          if(type === "admin"){
-            this.$router.push('/Administrador/inicio')
-          }else if(type === "adminE") {
-            this.$router.push('/AdministradorEmpresarial/inicio')
-          } else if(type === "psico"){
-            this.$router.push('/Entrevista/inicio')
-          }else  {
-            this.$cookies.remove('dataClient')
-            
-         this.usuario = ''
-         this.contrasena = ''
-         this.$notifier.showMessage({
-            content: "Corrija los campos del formulario para continuar",
-            color: "success",
-          });
-          }
+  async mounted(){
+ this.eliminar()  
 
-          
-    
-        // }
-      } catch (err) {
- 
-         this.usuario = ''
-         this.contrasena = ''
-         this.$notifier.showMessage({
+  },
+  methods: {
+    async eliminar(){
+     this.$cookies.remove("dataClient")
+     this.$cookies.remove("postUs")
+
+    },
+    async enviar() {
+   
+     
+      try {
+        const respuesta = await this.$axios.get(
+          `https://kinterviewbackmineria.herokuapp.com/mineria/login?usN=${this.usuario}&cl=${this.contrasena}`
+        );
+
+        let type = respuesta.data.rol;
+        this.$store.commit("session/logIn", respuesta.data);
+        this.alert = false;
+        if (type === "admin") {
+          this.$router.push("/Administrador/inicio");
+        } else if (type === "adminE") {
+          this.$router.push("/AdministradorEmpresarial/inicio");
+        } else if (type === "psico") {
+          this.$router.push("/Entrevista/inicio");
+        } else {
+          this.$cookies.remove("dataClient");
+
+          this.usuario = "";
+          this.contrasena = "";
+          this.$notifier.showMessage({
             content: "Corrija los campos del formulario para continuar",
             color: "success",
           });
+        }
+      } catch (err) {
+        this.usuario = "";
+        this.contrasena = "";
+        this.$notifier.showMessage({
+          content: "Corrija los campos del formulario para continuar",
+          color: "success",
+        });
       }
-    }
+    },
   },
 };
 </script>

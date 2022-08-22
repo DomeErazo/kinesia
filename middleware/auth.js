@@ -7,5 +7,7 @@ export default async function ({
     
       redirect('/login')
     }
+  }else if(path.startsWith('/')){
+    redirect(`/login`)
   }
 }
