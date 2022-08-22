@@ -43,13 +43,13 @@
               <v-col><img src="/1.svg" width="100%" /></v-col>
               <v-col cols="9">
                 <h1 style="color: #336699; margin-top: 30px">
-                  1. Escucha las recomendaciones del psicólogo
+                  1. Escucha las recomendaciones del entrevistador
                 </h1>
                 <p>
                   La primera impresión que causarás al entrevistador dependerá
                   de tu colaboración y atención a sus recomendaciones, recuerda
                   hacerle las preguntas necesarias para que no te quedes con
-                  dudas ya que una vez iniciada la entrevista no podrán ser
+                  dudas, ya que una vez iniciada la entrevista no podrán ser
                   resueltas
                 </p>
               </v-col>
@@ -93,7 +93,7 @@
                 </h1>
                 <p>
                   Es cierto que el tener que dirigirte a la cámara en muchas
-                  ocasiones puede resultar incómodo, sin embargo te recomendamos
+                  ocasiones puede resultar incómodo, sin embargo, te recomendamos
                   actuar con la mayor naturalidad posible ya que serán rasgos
                   que puedan afectar al resultado final. No te preocupes que la
                   entrevista no será grabada, por lo que una vez terminado este
@@ -136,7 +136,7 @@
               <v-col >
                 
                 <p>
-                 Si estás de acuerdo con todos los puntos explicados por el entrevistador y explicados anteriormente, por favor haz click en "continuar" y empezaremos con la entrevista. ¡Éxito!
+                 Si estás de acuerdo con todos los puntos explicados por el entrevistador y escritos anteriormente, por favor haz click en "continuar" y empezaremos con la entrevista. ¡Éxito!
                 </p>
             
               </v-col>

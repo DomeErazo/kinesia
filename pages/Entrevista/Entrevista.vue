@@ -1,46 +1,80 @@
 <template>
+<v-responsive :aspect-ratio="16 / 9">
   <div>
-    <v-row>
-      <p>Holi</p>
-    </v-row>
-    <!-- <v-row > -->
-    <!-- <v-col cols="6" sm="6" md="6" > -->
+    <v-card class="mx-auto" tile>
+      <v-row
+        class="text-md-center"
+        style="
+          height: 100px;
+          background-color: #8ea6ae;
+          margin-left: 15px;
+          margin-right: 15px;
+          margin-top: 15px;
+        "
+      >
+        <v-col cols="2"></v-col>
+        <v-col cols="8">
+          <h1
+            style="
+              color: white;
+
+              font-size: 50px;
+            "
+            class="text-md-center"
+          >
+            Entrevista
+          </h1>
+        </v-col>
+        <v-col cols="2"></v-col>
+      </v-row>
+    </v-card>
+
     <v-card class="text-center">
       <v-card-text>
-        <video id="video" playsinline autoplay style="width: 30px"></video>
+        <video
+          id="video"
+          playsinline
+          autoplay
+          style="width: 300px; height: 300px"
+        ></video>
         <!-- <v-btn :disabled="isPlaying" @click="play">Play</v-btn>
       <v-btn :disabled="!isPlaying" @click="stop">Stop</v-btn> -->
         <!-- <v-btn class="primary mb-2" block id="cambiar-camara" @click="cambiarCamara()"><v-icon>mdi-camera-party-mode</v-icon>Cambiar camara</v-btn> -->
+        <!-- AQUI TOMA LA CAPTURA -->
         <canvas
           id="canvas"
           width="400"
           height="400"
-        
           style="max-width: 100%"
-        >canvas</canvas>
-        <canvas
-          v-show="false"
-          id="otrocanvas"
+          hidden
+          >canvas</canvas
+        >
+        <!-- AQUI SE ESTA GUARDANDO LA CAPTURA DEL CANVAS-->
+        <canvas v-show="false" id="otrocanvas" width="300" height="300"
+          >otrocanvas</canvas
+        >
+        <!-- <img
+          src=""
+          id="photo"
+          alt="photo"
           width="300"
           height="300"
-     
-          
-        >otrocanvas</canvas>
-        <img src="" id="photo" alt="photo"   width="300" 
-          height="300" name="imagen">
+          name="imagen"
+        /> -->
         <!-- <v-btn id="startbutton" @click="takePicture">Take</v-btn> -->
-        <p class="text-h5 text-center black--text">
-        - {{ this.prediction }}
-        </p>
-        <div id="resul"></div>
+        <!-- <p class="text-h5 text-center black--text">- {{ this.prediction }}</p> -->
+        <div id="resul" style="font-size: 25px"></div>
+        <v-btn color="primary" @click="guardarEntrevista">Finalizar</v-btn>
       </v-card-text>
     </v-card>
     <!-- </v-col> -->
     <!-- </v-row> -->
   </div>
+  </v-responsive>
 </template>
 <script>
 import * as tf from "@tensorflow/tfjs";
+import axios from "axios";
 export default {
   layout: "entrevista",
   data() {
@@ -61,7 +95,6 @@ export default {
       category: null,
       modelReady: false,
       percentage: 0,
- 
     };
   },
   async mounted() {
@@ -83,29 +116,73 @@ export default {
       this.modelo = await tf.loadLayersModel("/modelo/model.json");
       this.overlay = false;
       console.log("Modelo cargado", this.modelo);
-      
     },
-     takePicture(){
+    takePicture() {
       canvas.width = 300;
       canvas.height = 300;
       canvas.getContext("2d").drawImage(video, 0, 0, 300, 300);
       const data = canvas.toDataURL("analisis/png");
-      const img=(data.replace(/data^:image\/(png|jpg);base64,/,""))
-      canvas.setAttribute('src', img);
-   
-       setTimeout(this.takePicture, 8000);
-       const imagen=document.imagen;
-      // this.predecir();
+      const img = data.replace(/data^:image\/(png|jpg);base64,/, "");
+      canvas.setAttribute("src", img);
 
+      setTimeout(this.takePicture, 8000);
+      const imagen = document.imagen;
+      // this.predecir();
+    },
+   async guardarEntrevista() {
+      // try {
+          const hoy=new Date();
+      const dia=hoy.getDate();
+      const mes=hoy.getMonth()+1;
+      const ano=hoy.getFullYear()
+const fechaEntrevista=`${ano}/${mes}/${dia}`;
+       
+      //   const res = await this.$axios.post(`api/entrevistain`, {
+      //     //creo que no debe mandar el usuario o usuario y contrasena deben ser null, rol debe ser post, nombre empresa, telefono no deben ser null, falta genero y correo
+      //     nombreEntrevistador: "dome",
+      //     gestos: "prueba",
+      //     personaIdpersona: {
+      //       id:"374",
+      //       nombre: "this.nombre",
+      //       apellido: "this.apellido",
+      //       telefono: "this.telefono",
+      //       rol: "post",
+      //       cedula: "this.cedula",
+      //       empresa: {
+      //         id: "4",
+      //         nombreempresa: "null",
+      //         telefono: "null",
+      //         estado: true,
+      //       },
+      //     },
+      //     usuario: {
+      //       id: "434",
+      //       usuario: "",
+      //       contrasena: "",
+      //       estado: true,
+      //       rolIdrol: {
+      //         id: "4",
+      //         rol: "post",
+      //       },
+      //     },
+      //     fechaEntrevista: Date.now(),
+ 
+      //     // genero: this.genero,
+      //     // correo: this.correo,
+      //   });
+    
+         window.location.href = "/Entrevista/listaPost";
+      this.video.pause();
+      // } catch (error) {}
+    
+     
     },
     procesarCamara() {
-
       this.ctx.drawImage(this.video, 0, 0, 400, 400, 0, 0, 400, 400);
       setTimeout(this.procesarCamara, 20);
     },
     loadPicture: function () {},
     mostrarCamara() {
-      
       this.video = document.querySelector("#video");
       this.canvas = document.querySelector("#canvas");
       this.otrocanvas = document.querySelector("#otrocanvas");
@@ -126,7 +203,7 @@ export default {
           .then((localMediaStream) => {
             this.currentStream = localMediaStream;
             this.video.srcObject = localMediaStream;
-           this.takePicture();
+            this.takePicture();
             this.procesarCamara();
             this.video.play();
             this.predecir();
@@ -139,17 +216,17 @@ export default {
         alert("No existe la funcion getUserMedia");
       }
     },
-   
+
     predecir() {
       if (this.modelo != null) {
         this.resamplesingle(this.canvas, 300, 300, this.otrocanvas);
       }
       setTimeout(this.predecir, 8000);
-   
+
       //Hacer la predicción
 
       const ctx2 = this.canvas.getContext("2d");
-     
+
       // const imageData=ctx2.drawImage(0,0,300,300)
       const imgData = ctx2.getImageData(0, 0, 300, 300);
 
@@ -171,33 +248,41 @@ export default {
 
       // const tensor = tf.tensor4d(arr);
       const tfarray = tf.tensor4d(arr);
-       const resul = this.modelo.predict(tfarray).dataSync();
+      const resul = this.modelo.predict(tfarray).dataSync();
       // let resul = this.modelo.predict(tfarray).dataSync();
-      let mayorIndice=resul.indexOf(Math.max.apply(null, resul));
-// console.log(resul.indexOf(Math.max.apply(null, resul)))
-      const class_names = ['aceptacion','confianza','confundido','inseguro','mentira','nervioso','verdad']
-      document.getElementById("resul").innerHTML=class_names[mayorIndice]
+      let mayorIndice = resul.indexOf(Math.max.apply(null, resul));
+      // console.log(resul.indexOf(Math.max.apply(null, resul)))
+      const class_names = [
+        "aceptacion",
+        "confianza",
+        "confundido",
+        "inseguro",
+        "mentira",
+        "nervioso",
+        "verdad",
+      ];
+      document.getElementById("resul").innerHTML = class_names[mayorIndice];
       console.log(resul.indexOf(Math.max.apply(null, resul)));
       if (mayorIndice == 0) {
         this.prediction = "Aceptación";
-      } else if ((mayorIndice == 1)) {
+      } else if (mayorIndice == 1) {
         this.prediction = "Confianza";
-      } else if ((mayorIndice == 2)) {
+      } else if (mayorIndice == 2) {
         this.prediction = "Confundido";
-      } else if ((mayorIndice == 3)) {
+      } else if (mayorIndice == 3) {
         this.prediction = "Inseguridad";
-      } else if ((mayorIndice == 4)) {
+      } else if (mayorIndice == 4) {
         this.prediction = "Mentira";
-      } else if ((mayorIndice == 5)) {
+      } else if (mayorIndice == 5) {
         this.prediction = "Nervioso";
-      } else if ((mayorIndice == 6)) {
+      } else if (mayorIndice == 6) {
         this.prediction = "Verdad";
       }
-  
+
       // resul = 0 ? this.prediction ="Aceptación": this.prediction="Chao"
       // prediction.print();
       // return prediction.get(0,0);
-      console.log(this.prediction)
+      console.log(this.prediction);
       // const resultDenso = this.modelo.predict(tensor);
       //resultDenso tiene el numerito
       // resultDenso <= .5 ? this.pediction = "Gato" : this.pediction = "Perro"

@@ -262,7 +262,6 @@ export default {
         },
 
         { value: "actions", sortable: false },
-        { value: "entrevista", sortable: false },
       ],
       search: "",
       cedula: "",
@@ -342,7 +341,7 @@ export default {
       window.location.href = "/Entrevista/Entrevista";
     },
     async obtenerPost() {
-      //FALTA CAPTURAR EL NOMBRE DE LA EMPRESA
+      //FALTA CAPTURAR EL NOMBRE DEL PSICOLOGO
       try {
         const res = await axios.get(`/api/entrevistaLi/dome
         `);
