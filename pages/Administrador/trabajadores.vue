@@ -100,7 +100,7 @@
                   outlined
                   rounded
                   v-model="contrasena"
-                  type="text"
+                  type="password"
                   color="primary"
                 ></v-text-field>
               </v-form>
@@ -215,6 +215,7 @@
                               :rules="[rules.email, rules.required]"
                             ></v-text-field>
                           </v-col>
+                          
                         </v-row>
                       </v-container>
                     </v-card-text>
@@ -467,7 +468,7 @@ export default {
         const res = await axios.get("/api/personaRol/adminE");
 
         const lis = res.data;
-        console.log(lis);
+   
         lis.forEach((facu) => {
           if (facu.usuario.estado == true) {
             facu.usuario.estado = "Activo";
@@ -486,10 +487,13 @@ export default {
         const res = await this.$axios.get("/api/empresa");
 
         const lis = res.data;
-        console.log(lis)
+       
 
         lis.forEach((element) => {
-          this.listaEmpresas.push(`${element.nombreempresa}`);
+          if(element.estado==true){
+ this.listaEmpresas.push(`${element.nombreempresa}`);
+          }
+         
         
         });
       } catch (err) {
@@ -551,10 +555,15 @@ export default {
             this.limpiar(),
             (this.id = ""),
             this.$notifier.showMessage({
-              content: "Estudiante añadido con éxito",
+              content: "Trabajador añadido con éxito",
               color: "success",
             });
-        } catch (err) {}
+        } catch (err) {
+          this.$notifier.showMessage({
+              content: "Asegúrese que el usuario y la cédula sean únicos",
+              color: "error",
+            });
+        }
       }
     },
     async actualizarDat() {

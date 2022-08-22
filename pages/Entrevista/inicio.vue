@@ -4,7 +4,7 @@
       <h1 style="text-align: center; margin-bottom: 10px">
         Ingreso de Datos del nuevo postulante
       </h1>
-      <img class="imagen" src="/ingresoDatos.svg" style="margin-top:30px" />
+      <img class="imagen" src="/ingresoDatos.svg" style="margin-top:30px; width: 300px;" />
       <div class="container">
         <v-row align="center" justify="center">
           <v-col cols="12" sm="15" md="8">
@@ -81,6 +81,49 @@
             <v-btn id="btn-ingreso" color="secondary" @click="agregarPost">
               Agregar postulante
             </v-btn>
+            <v-dialog v-model="dialog" max-width="750px">
+            <v-card
+    class="mx-auto"
+    max-width="750"
+    outlined
+  >
+    <v-list-item three-line>
+      <v-list-item-content>
+        <div class="text-overline mb-4">
+          Gracias por añadir un nuevo postulante
+        </div>
+        <v-list-item-title class="text-h5 mb-1">
+         A continuación será dirigido al proceso de entrevista
+        </v-list-item-title>
+        <v-spacer></v-spacer>
+        <v-list-item-subtitle>Por favor dirija la computadora al postulante y no olvide mencionarle que la entrevista será con la cámara encendida</v-list-item-subtitle>
+      </v-list-item-content>
+
+      <v-list-item-avatar size="100">
+             <img src="/k-logo.png"/>
+      </v-list-item-avatar>
+   
+    </v-list-item>
+
+    <v-card-actions>
+      <v-btn
+        outlined
+        rounded
+        text
+        @click="iniciarEntrevista"
+      >
+        Continuar
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+             <!-- <v-card >
+              <v-card-text >
+                <h1 style="margin-top:30px">A continuación será dirigido a la entrevista</h1></v-card-text>
+              <v-card-actions>
+                <a href="/Entrevista/Entrevista"> Continuar</a>
+              </v-card-actions>
+             </v-card> -->
+            </v-dialog>
           </v-col>
         </v-row>
        
@@ -98,8 +141,7 @@ export default {
   data() {
     return {
       valid: true,
-      facul: "",
-
+     
       rules: {
         required: (value) => !!value || "Campo Requerido.",
 
@@ -128,13 +170,10 @@ export default {
       usuario: "",
       telefono: "",
       genero: "",
-
-      esControlador: false,
-
+dialog:false,
+  
       prueba: [],
-      dialog: false,
-      dialogDelete: false,
-   
+    
 
       search: "",
       editedIndex: -1,
@@ -143,139 +182,64 @@ export default {
       idEmpresa: "",
       contrasena: "",
       cedula1: "",
-    editedItem: {
-        nombre: "",
-        apellido: "",
-        telefono: "",
-        cedula: "",
-        genero: "",
-        correo: "",
-      },
-      defaultItem: {
-        nombre: "",
-        apellido: "",
-        telefono: "",
-        cedula: "",
-        genero: "",
-        correo: "",
-      },
+    
     };
   },
   mounted() {
  
-    this.obtenerPost();
+    // this.obtenerPost();
   },
   computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "Nuevo Registro" : "Editar Registro";
-    },
+ 
   },
 
   watch: {
-    dialog(val) {
-      val || this.close();
-    },
-    dialogDelete(val) {
-      val || this.closeDelete();
-    },
+
 
   },
 
   methods: {
-    iniciarEntrevista(){
-window.location.href="/Entrevista/Entrevista"
-    },
-    
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
-      this.closeDelete();
-    },
-
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
   
 
-    async obtenerPost() {
-      try {
-        const res = await axios.get("/api/personaRlEm/post/toxicosgroupSADO");
+    // async obtenerPost() {
+    //   try {
+    //     const res = await axios.get("/api/personaRlEm/post/toxicosgroupSADO");
 
-        const lis = res.data;
-        console.log(lis);
-        lis.forEach((element) => {
-          if (element.usuario.estado == true) {
-            element.usuario.estado = "Activo";
-          } else {
-            element.usuario.estado = "Inactivo";
-          }
-          this.desserts = res.data;
-        });
+    //     const lis = res.data;
+    //     lis.forEach((element) => {
+    //       if (element.usuario.estado == true) {
+    //         element.usuario.estado = "Activo";
+    //       } else {
+    //         element.usuario.estado = "Inactivo";
+    //       }
+    //       this.desserts = res.data;
+    //     });
 
-        this.desserts = res.data;
-     
-
-        //  this.llenarTabla();
-      } catch (err) {
-      }
+    //     this.desserts = res.data;
+    
+    //   } catch (err) {
+    //   }
+    // },
+   iniciarEntrevista() {
+      window.location.href = "/Entrevista/consejos";
     },
-
-    llenarTabla() {
-         this.desserts.push({
-        nombre: this.nombre,
-        apellido: this.apellido,
-        cedula: this.cedula,
-        correo: this.correo,
-
-        usuario: this.usuario,
-        telefono: this.telefono,
-        genero: this.genero,
-      });
-      this.obtenerPost();
-    },
-
-    async agregarPost() {
+     async agregarPost() {
     if (
         !this.nombre ||
         !this.apellido ||
         !this.cedula ||
         !this.correo ||
         !this.telefono ||
-        !this.genero ||
-        !this.usuario ||
-        !this.contrasena
+        !this.genero 
       ) {
         this.$notifier.showMessage({
           content: "Rellene todos los datos",
           color: "warning",
         });
+        this.dialog=false
       } else {
         try {
-          const res = await this.$axios.post(`api/insertPersona/4`, {
+          const res = await this.$axios.post(`api/inPerNam/toxicosgroupSADO`, {
             nombre: this.nombre,
             apellido: this.apellido,
             genero: this.genero,
@@ -286,8 +250,8 @@ window.location.href="/Entrevista/Entrevista"
             cedula: this.cedula,
 
             usuario: {
-              usuario: this.usuario,
-              contrasena: this.contrasena,
+              usuario:null,
+              contrasena: null,
               estado: true,
               rolIdrol: {
                 id: "4",
@@ -295,16 +259,27 @@ window.location.href="/Entrevista/Entrevista"
               },
             },
           });
-          this.obtenerPost();
-            this.limpiar(),
-            (this.id = ""),
+        
+       this.limpiar();
+      
+            this.dialog=true;
+        } catch (err) {
             this.$notifier.showMessage({
-              content: "Postulante añadido con éxito",
-              color: "success",
+              content: "Asegúrese que la cédula sea única",
+              color: "error",
             });
-        } catch (err) {}
+        }
       }
       },
+      async limpiar(){
+         (this.nombre = ""),
+        (this.apellido = ""),
+        (this.cedula = ""),
+        (this.telefono = ""),
+        (this.genero = ""),
+        (this.correo = ""),
+        this.$refs.form.reset();
+      }
    
 
   },

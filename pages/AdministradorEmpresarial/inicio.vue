@@ -10,13 +10,14 @@
       <v-card-text>
         <div class="card">
           <div class="container" id="tamaño">
-            <v-card-text class="texto">
-           Kinterview es una herramienta de apoyo para las distintas organizaciones para el proceso de contratación de nuevos trabajadores, su objetivo es brindar soporte en el proceso 
+                <v-card-text class="texto">
+           Kinterview es una herramienta de apoyo para el proceso de contratación de nuevos trabajadores en las distintas organizaciones, su principal objetivo es brindar soporte en el proceso 
            de análisis del perfil psicológico del postulante a través del análisis del lenguaje facial, para de esta manera resaltar diversos aspectos que pueden ser de alto interés al 
-           momento de la selección final  </v-card-text>
+           momento de la selección final.  </v-card-text>
               <v-card-text>Entre las observaciones que el sistema tomará en cuenta tenemos: confianza, inseguridad, confusión, aceptación, nervios y finalmente si dice la verdad o miente 
                 en sus respuestas. Estos son factores importantes que generalmente se toma en cuenta en este tipo de procesos para que la empresa pueda decidir si es conveniente o no la 
                 persona a la que están considerando contratar según sus intereses. </v-card-text>
+                <v-card-text>Se le recuerda que los resultados obtenidos a través de esta herramienta son solo un apoyo a la decisión final y además estos datos son de uso exclusivo de la organización</v-card-text>
 
           </div>
         </div>

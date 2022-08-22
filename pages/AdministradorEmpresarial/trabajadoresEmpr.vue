@@ -4,7 +4,7 @@
       <h1 style="text-align: center; margin-bottom: 10px">
         Ingreso de nuevo personal
       </h1>
-      <img class="imagen" src="/trabajadores.svg" />
+      <img class="imagen" src="/trabajadores.svg" style="text-align: center; width:300px" />
       <div class="container">
         <v-row align="center" justify="center">
           <v-col cols="12" sm="15" md="8">
@@ -92,7 +92,7 @@
                   outlined
                   rounded
                   v-model="contrasena"
-                  type="text"
+                  type="password"
                   color="primary"
                 ></v-text-field>
               </v-form>
@@ -103,49 +103,6 @@
             </v-btn>
           </v-col>
         </v-row>
-        <!-- <v-row> -->
-        <!-- <v-col cols="12">
-            <v-chip class="ma-2" color="#6398E4" outlined>
-              <v-icon left> mdi-office-building </v-icon>
-              Si no encuentra la facultad requerida, ingrese una nueva
-              <v-switch
-                style="margin-left: 6px; padding-bottom: 15px"
-                v-model="ok"
-                color="#CCD5E2"
-                value="secondary"
-                hide-details
-              ></v-switch>
-            </v-chip>
-          </v-col> -->
-        <!-- </v-row> -->
-        <!-- <v-row align="center" justify="center">
-          <v-col cols="12" sm="15" md="8">
-            <v-card-text
-              class="elevation-12"
-              id="card-in"
-              :single-expand="singleExpand"
-              v-if="ok"
-            >
-              <v-form ref="form" v-model="form">
-                <p>Ingrese una facultad:</p>
-                <v-text-field
-                  ref="facultad"
-                  label="Facultad"
-                  outlined
-                  rounded
-                  v-model="nombref"
-                  :rules="[() => !!nombref || 'Campo obligatorio']"
-                  type="text"
-                  color="primary"
-                >
-                </v-text-field>
-              </v-form>
-              <v-btn id="btn-ingreso" color="secondary" @click="agregarFac">
-                Agregar
-              </v-btn>
-            </v-card-text>
-          </v-col>
-        </v-row> -->
       </div>
 
       <v-layout align-start>
@@ -407,10 +364,9 @@ export default {
     };
   },
   mounted() {
-    // this.obtenerListaEst();
-    // this.obtenerFac();
+   
     this.obtenerPsic();
-    // this.campos();
+    
   },
   computed: {
     formTitle() {
@@ -483,7 +439,7 @@ export default {
       try {
         const res = await axios.get(`/api/personaRlEm/psico/toxicosgroupSADO`);
         const lis = res.data;
-        console.log(lis);
+       
 
         lis.forEach((element) => {
           if (element.usuario.estado == true) {
@@ -496,7 +452,7 @@ export default {
 
         this.desserts = res.data;
       } catch (err) {
-        console.log(err);
+      
       }
     },
 
@@ -557,7 +513,12 @@ export default {
               content: "Trabajador añadido con éxito",
               color: "success",
             });
-        } catch (err) {}
+        } catch (err) {
+              this.$notifier.showMessage({
+              content: "Asegúrese que el usuario y la cédula sean únicos",
+              color: "error",
+            });
+        }
       }
     },
      async actualizarDat() {

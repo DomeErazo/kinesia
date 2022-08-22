@@ -88,7 +88,7 @@ export default {
   methods: {
  async enviar() { 
       try {
-        const respuesta = await this.$axios.post("/api/kinterview", {
+        const respuesta = await this.$axios.post(`https://kinterviewbackmineria.herokuapp.com/mineria/login`, {
           usuario: this.usuario,
           contrasena: this.contrasena
         })
@@ -118,7 +118,7 @@ export default {
         console.log(err)
         console.log("entro")
          this.usuario = ''
-         this.contra = ''
+         this.contrasena = ''
          this.$notifier.showMessage({
             content: "Corrija los campos del formulario para continuar",
             color: "success",

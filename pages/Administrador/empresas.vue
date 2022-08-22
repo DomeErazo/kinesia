@@ -4,12 +4,16 @@
       <h1 style="text-align: center; margin-bottom: 10px">
         Ingreso de nuevas Empresas
       </h1>
-      <img class="imagen" src="/empresa.svg" />
+      <img
+        class="imagen"
+        src="/empresa.svg"
+        style="width: 300px; text-align: center"
+      />
       <div class="container">
         <v-row align="center" justify="center">
           <v-col cols="12" sm="15" md="8">
-            <v-card-text class="elevation-12" id="card-in" >
-              <v-form ref="form" v-model="form" >
+            <v-card-text class="elevation-12" id="card-in">
+              <v-form ref="form" v-model="form">
                 <p>Ingrese los datos de la empresa:</p>
                 <v-text-field
                   ref="empresa"
@@ -28,7 +32,7 @@
                   outlined
                   rounded
                   v-model="telefono"
-                  :rules="[ rules.tel]"
+                  :rules="[rules.tel]"
                   maxlength="10"
                   type="text"
                   color="primary"
@@ -37,7 +41,12 @@
               </v-form>
             </v-card-text>
 
-            <v-btn id="btn-ingreso" color="secondary" @click="agregarEmpr" :disabled="!form">
+            <v-btn
+              id="btn-ingreso"
+              color="secondary"
+              @click="agregarEmpr"
+              :disabled="!form"
+            >
               Agregar Empresa
             </v-btn>
           </v-col>
@@ -73,32 +82,28 @@
                     <v-card-title> </v-card-title>
 
                     <v-card-text>
-                       <form ref="valid">
-                      <v-container>
-                       
-                        <v-row>
-                          <v-col cols="12" sm="6" md="6">
-                            
-                            <v-text-field
-                              v-model="editedItem.nombreempresa"
-                              label="Empresa"
-                              :rules="[() => !!nombreempresa]"
-                            ></v-text-field>
-                          </v-col>
-                        </v-row>
-                        <v-row>
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              v-model="editedItem.telefono"
-                              label="Teléfono"
-                              :rules="[rules.tel]"
-                              maxlength="10"
-                            ></v-text-field>
-                            
-                          </v-col>
-                        </v-row>
-                        
-                      </v-container>
+                      <form ref="valid">
+                        <v-container>
+                          <v-row>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                v-model="editedItem.nombreempresa"
+                                label="Empresa"
+                                :rules="[() => !!editedItem.nombreempresa]"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                v-model="editedItem.telefono"
+                                label="Teléfono"
+                                :rules="[rules.tel]"
+                                maxlength="10"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-container>
                       </form>
                     </v-card-text>
                     <v-card-actions>
@@ -286,13 +291,10 @@ export default {
           this.desserts = res.data;
         });
       } catch (err) {
-        console.log(err);
-        if (err.response.status == 404) {
-          this.$notifier.showMessage({
-            content: `No se ha ingresado empresas`,
-            color: "error",
-          });
-        }
+        this.$notifier.showMessage({
+          content: `No se ha ingresado empresas`,
+          color: "error",
+        });
       }
     },
     async agregarEmpr() {
@@ -318,13 +320,10 @@ export default {
             color: "success",
           });
         } catch (err) {
-          console.log(err);
-          if (err.response.status == 500) {
-            this.$notifier.showMessage({
-              content: `No se pudo añadir la empresa`,
-              color: "error",
-            });
-          }
+          this.$notifier.showMessage({
+            content: `No se pudo añadir la empresa`,
+            color: "error",
+          });
         }
       }
     },
@@ -344,7 +343,6 @@ export default {
           color: "success",
         });
       } catch (err) {
-        console.log(err);
         this.$notifier.showMessage({
           content: "Error al editar",
           color: "error",
@@ -372,7 +370,6 @@ export default {
           color: "success",
         });
       } catch (err) {
-        console.log(err);
         this.$notifier.showMessage({
           content: `Error al actualizar estado`,
           color: "error",

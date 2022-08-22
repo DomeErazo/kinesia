@@ -11,10 +11,10 @@
           <v-app-bar-nav-icon dark v-else @click.stop="drawer = !drawer" />
           <v-toolbar-title>
             <img
-              class="mt-2"
-              src="/imagen4.png"
-              width="60"
-              style="margin-left: -15px"
+                 class="mt-2"
+              src="/kinesialogo.png"
+              width="200"
+              style="margin-left: -30px"
             />
           </v-toolbar-title>
 
@@ -125,18 +125,19 @@ export default {
           route: "/Entrevista/inicio/",
           key: 1,
         },
-        {
-          title: "Lista de Postulantes",
-          icon: "mdi-account-group-outline",
-          route: "/Entrevista/listaPost",
-
-          key: 2,
-        },
+     
         {
           title: "Entrevista",
           icon: "mdi-account-group-outline",
          
           disabled:true
+        },
+           {
+          title: "Lista de Postulantes",
+          icon: "mdi-account-group-outline",
+          route: "/Entrevista/listaPost",
+
+          key: 2,
         },
        
       ],
