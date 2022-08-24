@@ -361,7 +361,7 @@ export default {
         //TRAER EL ID DE SABE DIOS QUE
         const resp = await axios.get(`/api/informe/print/${this.editedItem.id}`);
         window.open(`/api/informe/print/${this.editedItem.id}`);
-        console.log(resp);
+       
         this.close();
 
         this.closeDelete();

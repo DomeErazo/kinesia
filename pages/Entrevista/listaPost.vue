@@ -322,13 +322,13 @@ export default {
       if (this.editedItem.personaIdoersona.genero == "Femenino") {
         setTimeout(() => {
           let img = document.getElementById("img1");
-          console.log(img);
+       
           img.src = "/userMujer.png";
         }, 1);
       } else {
         setTimeout(() => {
           let img = document.getElementById("img1");
-          console.log(img);
+      
           img.src = "/userHombre.png";
         }, 1);
       }
@@ -345,13 +345,13 @@ export default {
         const res = await axios.get(`/api/entrevistaLi/${Npsic + " "+Apsic}
         `);
         const lis = res.data;
-        console.log(lis);
+      
 
         this.desserts = res.data;
 
         this.desserts = res.data;
       } catch (err) {
-        console.log(err);
+       
       }
     },
     limpiar() {
@@ -404,12 +404,12 @@ export default {
         
         const resp = await axios.get(`/api/informe/print/${this.editedItem.id}`);
         window.open(`/api/informe/print/${this.editedItem.id}`);
-        console.log(resp);
+        
         this.close();
 
         this.closeDelete();
       } catch (err) {
-        console.log("error" + err);
+      
       }
     },
     editItem(item) {

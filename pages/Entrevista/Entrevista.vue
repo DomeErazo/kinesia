@@ -120,11 +120,11 @@ export default {
   },
   methods: {
     async initModel() {
-      console.log("Cargando modelo...");
+      
       this.overlay = true;
       this.modelo = await tf.loadLayersModel("/modelo/model1.json");
       this.overlay = false;
-      console.log("Modelo cargado", this.modelo);
+   
     },
     
     async cargarEntrevista() {
@@ -238,7 +238,7 @@ export default {
       }
 
       this.resultados.push(this.resul);
-      console.log(this.resultados);
+    
       //
     },
 
