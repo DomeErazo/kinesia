@@ -324,13 +324,13 @@ export default {
       if (this.editedItem.personaIdoersona.genero == "Femenino") {
         setTimeout(() => {
           let img = document.getElementById("img1");
-          console.log(img);
+          
           img.src = "/userMujer.png";
         }, 1);
       } else {
         setTimeout(() => {
           let img = document.getElementById("img1");
-          console.log(img);
+        
           img.src = "/userHombre.png";
         }, 1);
       }
@@ -348,39 +348,11 @@ export default {
     
         this.desserts = res.data;
       } catch (err) {
-        console.log(err);
+       
       }
     },
 
-    // async actualizarDat() {
-    //   try {
-    //     const datos = {
-    //       // user: this.$cookies.get("dataClient").usuario.nombreUsuario,
-    //       nombre: this.editedItem.personaIdoersona.nombre,
-    //       apellido: this.editedItem.personaIdoersona.apellido,
-    //       telefono: this.editedItem.personaIdoersona.telefono,
-    //       rol: "post",
-    //       cedula: this.editedItem.personaIdoersona.cedula,
-    //       genero: this.editedItem.personaIdoersona.genero,
-    //       correo: this.editedItem.personaIdoersona.correo,
-    //     };
-
-    //     await this.$axios.put(`api/updatePersona/${this.editedItem.id}`, datos);
-
-    //     this.obtenerPost();
-    //     this.close();
-    //     this.$notifier.showMessage({
-    //       content: "Se editó con éxito",
-    //       color: "success",
-    //     });
-    //   } catch (err) {
-    //     this.$notifier.showMessage({
-    //       content: "Error al editar",
-    //       color: "error",
-    //     });
-    //     this.close();
-    //   }
-    // },
+   
     async resulta() {
       this.dialogResult = true;
     },
@@ -394,7 +366,7 @@ export default {
 
         this.closeDelete();
       } catch (err) {
-        console.log("error" + err);
+       
       }
     },
     editItem(item) {

@@ -166,16 +166,11 @@ export default {
     };
   },
   methods: {
-    //   iniciarEntrevista() {
-    //   
-    // },
+
     async guardarEntrevista() {
-      // try {
+    
       const hoy = new Date();
-      // const dia = hoy.getDate();
-      // const mes = hoy.getMonth() + 1;
-      // const ano = hoy.getFullYear();
-      // const fechaEntrevista = `${ano}-${mes}-${dia}`;
+
       const fechaEntrevista=hoy;
 
       let ced = this.$cookies.get("postUs").cedula;
@@ -187,6 +182,7 @@ export default {
         gestos: null,
         fechaEntrevista: fechaEntrevista,
       });
+      this.$cookies.set('datoEnt', res.data)
       window.location.href = "/Entrevista/Entrevista";
       } catch (error) {
         

@@ -37,9 +37,7 @@
             autoplay
             style="width: 300px; height: 300px"
           ></video>
-          <!-- <v-btn :disabled="isPlaying" @click="play">Play</v-btn>
-      <v-btn :disabled="!isPlaying" @click="stop">Stop</v-btn> -->
-          <!-- <v-btn class="primary mb-2" block id="cambiar-camara" @click="cambiarCamara()"><v-icon>mdi-camera-party-mode</v-icon>Cambiar camara</v-btn> -->
+       
           <!-- AQUI TOMA LA CAPTURA -->
           <canvas
             id="canvas"
@@ -47,67 +45,45 @@
             height="400"
             style="max-width: 100%"
             hidden
-            >canvas</canvas
-          >
+          ></canvas>
           <!-- AQUI SE ESTA GUARDANDO LA CAPTURA DEL CANVAS-->
-          <canvas v-show="false" id="otrocanvas" width="300" height="300"
-            >otrocanvas</canvas
-          >
-          <!-- <img
-          src=""
-          id="photo"
-          alt="photo"
-          width="300"
-          height="300"
-          name="imagen"
-        /> -->
-          <!-- <v-btn id="startbutton" @click="takePicture">Take</v-btn> -->
-          <!-- <p class="text-h5 text-center black--text">- {{ this.prediction }}</p> -->
+          <canvas id="otrocanvas" v-show="false" width="300" height="300">otrocanvas</canvas>
+   
+          <!--IMPRIMO EL RESULTADO -->
           <div id="resul" style="font-size: 25px"></div>
 
-          <v-btn color="primary" @click="abrirDialog">Finalizar</v-btn>
+          <v-btn color="primary" @click="cargarEntrevista">Finalizar</v-btn>
         </v-card-text>
       </v-card>
       <v-dialog v-model="dialog" max-width="750px">
-        <v-card
-          >
-           <v-list-item three-line>
-      <v-list-item-content>
-      
-        <v-list-item-title class="text-h5 mb-1">
-        Tu entrevista ha finalizado con éxito
-        </v-list-item-title>
-        <v-spacer></v-spacer>
-        <v-list-item-subtitle>A continuación tus resultados serán entregados al entrevistador a
-            cargo, si haz sido favorecido te estaremos informando para que
-            formes parte de nuestro equipo</v-list-item-subtitle>
-             <h5>Gracias por tu colaboración</h5>
-      </v-list-item-content>
+        <v-card>
+          <v-list-item three-line>
+            <v-list-item-content>
+              <v-list-item-title class="text-h5 mb-1">
+                Tu entrevista ha finalizado con éxito
+              </v-list-item-title>
+              <v-spacer></v-spacer>
+              <v-list-item-subtitle
+                >A continuación tus resultados serán entregados al entrevistador
+                a cargo, si haz sido favorecido te estaremos informando para que
+                formes parte de nuestro equipo</v-list-item-subtitle
+              >
+              <h5>Gracias por tu colaboración</h5>
+            </v-list-item-content>
 
-      <v-list-item-avatar size="100">
-             <img src="/k-logo.png"/>
-      </v-list-item-avatar>
-   
-    </v-list-item>
+            <v-list-item-avatar size="100">
+              <img src="/k-logo.png" />
+            </v-list-item-avatar>
+          </v-list-item>
 
-    <v-card-actions>
-      <v-btn
-        outlined
-        rounded
-        text
-        @click="enviarResults"
-      >
-        Continuar
-      </v-btn>
-    </v-card-actions>
-       
-         
-          
-             </v-card
-        >
+          <v-card-actions>
+            <v-btn outlined rounded text @click="enviarResults">
+              Continuar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
       </v-dialog>
-      <!-- </v-col> -->
-      <!-- </v-row> -->
+    
     </div>
   </v-responsive>
 </template>
@@ -135,17 +111,10 @@ export default {
       category: null,
       modelReady: false,
       percentage: 0,
+      resultados: [],
     };
   },
   async mounted() {
-    // let that =this;
-    // async function loadModel(){
-    //   that.modelo=await tf.loadLayersModel("/modelo/model.json");
-    //   // that.modelReady=true;
-    //   // that.predictedValue='Ready for making predictions'
-    // }
-    // loadModel();
-
     await this.initModel();
     this.mostrarCamara();
   },
@@ -153,31 +122,22 @@ export default {
     async initModel() {
       console.log("Cargando modelo...");
       this.overlay = true;
-      this.modelo = await tf.loadLayersModel("/modelo/model.json");
+      this.modelo = await tf.loadLayersModel("/modelo/model1.json");
       this.overlay = false;
       console.log("Modelo cargado", this.modelo);
     },
-    takePicture() {
-      canvas.width = 300;
-      canvas.height = 300;
-      canvas.getContext("2d").drawImage(video, 0, 0, 300, 300);
-      const data = canvas.toDataURL("analisis/png");
-      const img = data.replace(/data^:image\/(png|jpg);base64,/, "");
-      canvas.setAttribute("src", img);
-
-      setTimeout(this.takePicture, 8000);
-      const imagen = document.imagen;
-      // this.predecir();
+    
+    async cargarEntrevista() {
+      let entre = this.$cookies.get("datoEnt").id;
+      const res = await axios.put(`/api/entrevistaGestos/${entre}`,
+      {
+    resultados:this.resultados
+    
+    
+      }
+      );
+       this.dialog = true;
     },
-    abrirDialog() {
-      this.dialog = true;
-    },
-  
-    procesarCamara() {
-      this.ctx.drawImage(this.video, 0, 0, 400, 400, 0, 0, 400, 400);
-      setTimeout(this.procesarCamara, 20);
-    },
-    loadPicture: function () {},
     mostrarCamara() {
       this.video = document.querySelector("#video");
       this.canvas = document.querySelector("#canvas");
@@ -199,9 +159,9 @@ export default {
           .then((localMediaStream) => {
             this.currentStream = localMediaStream;
             this.video.srcObject = localMediaStream;
-            this.takePicture();
+       
             this.procesarCamara();
-            this.video.play();
+            // this.video.play();
             this.predecir();
           })
           .catch(function (err) {
@@ -212,83 +172,78 @@ export default {
         alert("No existe la funcion getUserMedia");
       }
     },
-
+    procesarCamara() {
+      this.ctx.drawImage(this.video, 0, 0, 400, 400, 0, 0, 400, 400);
+      setTimeout(this.procesarCamara, 20);
+    },
     predecir() {
       if (this.modelo != null) {
+        //REASIGNAMOS EL CANVAS A 300*300
         this.resamplesingle(this.canvas, 300, 300, this.otrocanvas);
-      }
-      setTimeout(this.predecir, 8000);
+        setTimeout(this.predecir, 8000);
 
-      //Hacer la predicción
+        //Hacer la predicción
 
-      const ctx2 = this.canvas.getContext("2d");
+        const ctx2 = this.otrocanvas.getContext("2d");
 
-      // const imageData=ctx2.drawImage(0,0,300,300)
-      const imgData = ctx2.getImageData(0, 0, 300, 300);
+       
+        const imgData = ctx2.getImageData(0, 0, 300, 300);
 
-      let arr = [];
-      let arr300 = [];
-      for (let p = 0; p < imgData.data.length; p += 4) {
-        const red = imgData.data[p] / 255;
-        const green = imgData.data[p + 1] / 255;
-        const blue = imgData.data[p + 2] / 255;
+        let arr = []; //ARREGLO COMPLETO PARA RECORRER LOS PIXELES
+        let arr300 = []; //AL LLEGAR AL ARR300 POSICIONES SE PONE EN ARR COMO UN NUEVO INDICE
+        for (let p = 0; p < imgData.data.length; p += 4) {
+          const red = imgData.data[p] / 255;
+          const green = imgData.data[p + 1] / 255;
+          const blue = imgData.data[p + 2] / 255;
 
-        arr300.push([red, green, blue]);
-        if (arr300.length === 300) {
-          arr.push(arr300);
-          arr300 = [];
+          arr300.push([red, green, blue]);
+          if (arr300.length === 300) {
+            arr.push(arr300);
+            arr300 = [];
+          }
+        }
+
+        arr = [arr];
+
+        // const tensor = tf.tensor4d(arr);
+        const tfarray = tf.tensor4d(arr);
+        const resul = this.modelo.predict(tfarray).dataSync();
+        // let resul = this.modelo.predict(tfarray).dataSync();
+        let mayorIndice = resul.indexOf(Math.max.apply(null, resul));
+        const class_names = [
+          "aceptacion",
+          "confianza",
+          "confundido",
+          "inseguro",
+          "mentira",
+          "nervioso",
+          "verdad",
+        ];
+        document.getElementById("resul").innerHTML = class_names[mayorIndice];
+        if (mayorIndice == 0) {
+          this.resul = "aceptacion";
+        } else if (mayorIndice == 1) {
+          this.resul = "confianza";
+        } else if (mayorIndice == 2) {
+          this.resul = "confundido";
+        } else if (mayorIndice == 3) {
+          this.resul = "inseguro";
+        } else if (mayorIndice == 4) {
+          this.resul = "mentira";
+        } else if (mayorIndice == 5) {
+          this.resul = "nervioso";
+        } else if (mayorIndice == 6) {
+          this.resul = "verdad";
         }
       }
 
-      arr = [arr];
-
-      // const tensor = tf.tensor4d(arr);
-      const tfarray = tf.tensor4d(arr);
-      const resul = this.modelo.predict(tfarray).dataSync();
-      // let resul = this.modelo.predict(tfarray).dataSync();
-      let mayorIndice = resul.indexOf(Math.max.apply(null, resul));
-      // console.log(resul.indexOf(Math.max.apply(null, resul)))
-      const class_names = [
-        "aceptacion",
-        "confianza",
-        "confundido",
-        "inseguro",
-        "mentira",
-        "nervioso",
-        "verdad",
-      ];
-      document.getElementById("resul").innerHTML = class_names[mayorIndice];
-      console.log(resul.indexOf(Math.max.apply(null, resul)));
-      if (mayorIndice == 0) {
-        this.prediction = "Aceptación";
-      } else if (mayorIndice == 1) {
-        this.prediction = "Confianza";
-      } else if (mayorIndice == 2) {
-        this.prediction = "Confundido";
-      } else if (mayorIndice == 3) {
-        this.prediction = "Inseguridad";
-      } else if (mayorIndice == 4) {
-        this.prediction = "Mentira";
-      } else if (mayorIndice == 5) {
-        this.prediction = "Nervioso";
-      } else if (mayorIndice == 6) {
-        this.prediction = "Verdad";
-      }
-
-      // resul = 0 ? this.prediction ="Aceptación": this.prediction="Chao"
-      // prediction.print();
-      // return prediction.get(0,0);
-      console.log(this.prediction);
-      // const resultDenso = this.modelo.predict(tensor);
-      //resultDenso tiene el numerito
-      // resultDenso <= .5 ? this.pediction = "Gato" : this.pediction = "Perro"
+      this.resultados.push(this.resul);
+      console.log(this.resultados);
+      //
     },
-    // predictValue(inputs){
-    //   const tfarray = tf.tensor4d(arr);
-    //   const prediction = this.modelo.predcit(tfarray);
-    //   prediction.print();
-    //   return prediction.get(0,0);
-    // },
+
+  
+  
 
     resamplesingle(canvas, width, height, resize_canvas) {
       const width_source = canvas.width;
@@ -355,11 +310,10 @@ export default {
       }
       ctx2.putImageData(img2, 0, 0);
     },
-    async enviarResults(){
+    async enviarResults() {
       this.video.pause();
-      window.location.href="/Entrevista/listaPost"
-
-    }
+      window.location.href = "/Entrevista/listaPost";
+    },
   },
 };
 </script>

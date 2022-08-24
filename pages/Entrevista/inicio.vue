@@ -116,13 +116,7 @@
       </v-btn>
     </v-card-actions>
   </v-card>
-             <!-- <v-card >
-              <v-card-text >
-                <h1 style="margin-top:30px">A continuación será dirigido a la entrevista</h1></v-card-text>
-              <v-card-actions>
-                <a href="/Entrevista/Entrevista"> Continuar</a>
-              </v-card-actions>
-             </v-card> -->
+          
             </v-dialog>
           </v-col>
         </v-row>
@@ -187,7 +181,7 @@ dialog:false,
   },
   mounted() {
  
-    // this.obtenerPost();
+    
   },
   computed: {
  
@@ -201,25 +195,7 @@ dialog:false,
   methods: {
   
 
-    // async obtenerPost() {
-    //   try {
-    //     const res = await axios.get("/api/personaRlEm/post/toxicosgroupSADO");
 
-    //     const lis = res.data;
-    //     lis.forEach((element) => {
-    //       if (element.usuario.estado == true) {
-    //         element.usuario.estado = "Activo";
-    //       } else {
-    //         element.usuario.estado = "Inactivo";
-    //       }
-    //       this.desserts = res.data;
-    //     });
-
-    //     this.desserts = res.data;
-    
-    //   } catch (err) {
-    //   }
-    // },
    iniciarEntrevista() {
       window.location.href = "/Entrevista/consejos";
     },

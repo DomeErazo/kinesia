@@ -95,6 +95,7 @@ export default {
     async eliminar(){
      this.$cookies.remove("dataClient")
      this.$cookies.remove("postUs")
+     this.$cookies.remove("datoEnt")
 
     },
     async enviar() {

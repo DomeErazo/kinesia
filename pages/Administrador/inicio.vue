@@ -29,7 +29,7 @@
         
 
         <h3 style="text-align: center; margin-bottom: 10px">Gracias por formar parte de nuestro equipo</h3>
-        <!-- <h1 style="text-align: center; margin-bottom: 10px">Juntos Saldremos de esto</h1> -->
+   
 
         <br />
 
