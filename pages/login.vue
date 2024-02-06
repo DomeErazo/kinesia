@@ -102,8 +102,8 @@ export default {
    
      
       try {
-        const respuesta = await this.$axios.get(
-          `https://mineriaproyecto.herokuapp.com/login?usN=${this.usuario}&cl=${this.contrasena}`
+        const respuesta = await this.$axios.post(
+          `https://mineriaproyecto.herokuapp.com/mineria/login`
         );
 
         let type = respuesta.data.rol;
