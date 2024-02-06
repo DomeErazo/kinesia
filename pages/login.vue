@@ -102,7 +102,7 @@ export default {
       
       try {
         const respuesta = await this.$axios.post(
-          `https://mineriaproyecto.herokuapp.com/mineria/login',
+          `https://mineriaproyecto.herokuapp.com/mineria/login/',
           {
             params:{
 usuario:this.usuario,
