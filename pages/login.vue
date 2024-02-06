@@ -102,7 +102,7 @@ export default {
       
       try {
         const respuesta = await this.$axios.post(
-          `https://mineriaproyecto.herokuapp.com/mineria/login?usN=${this.usuario}&cl=${this.contrasena}'
+          `https://mineriaproyecto.herokuapp.com/mineria/login?usN=${this.usuario}&cl=${this.contrasena}`
         );
         let type = respuesta.data.rol;
         this.$store.commit("session/logIn", respuesta.data);
