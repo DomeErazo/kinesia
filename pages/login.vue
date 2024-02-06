@@ -99,17 +99,17 @@ export default {
 
     },
     async enviar() {
-   
-     
+      
       try {
         const respuesta = await this.$axios.post(
-          `https://mineriaproyecto.herokuapp.com/mineria/login/',
+          `https://mineriaproyecto.herokuapp.com/mineria/login',
           {
             usuario:this.usuario,
-            contrasena: this.contrasena
+            contrasena: this.contrasena          
+            }
+        ).then(function(respuesta){
 
-          }
-        );
+        }).catch(function(err));
 
         let type = respuesta.data.rol;
         this.$store.commit("session/logIn", respuesta.data);
