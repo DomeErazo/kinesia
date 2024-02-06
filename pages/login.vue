@@ -102,18 +102,8 @@ export default {
       
       try {
         const respuesta = await this.$axios.post(
-          `https://mineriaproyecto.herokuapp.com/mineria/login/',
-          {
-            params:{
-usuario:this.usuario,
-            contrasena: this.contrasena 
-            }
-                     
-            }
-        ).then(function(respuesta){
-
-        }).catch(function(err));
-
+          `https://mineriaproyecto.herokuapp.com/mineria/login?usN=${this.usuario}&cl=${this.contrasena}',
+        );
         let type = respuesta.data.rol;
         this.$store.commit("session/logIn", respuesta.data);
         this.alert = false;
