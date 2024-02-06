@@ -104,8 +104,11 @@ export default {
         const respuesta = await this.$axios.post(
           `https://mineriaproyecto.herokuapp.com/mineria/login',
           {
-            usuario:this.usuario,
-            contrasena: this.contrasena          
+            params:{
+usuario:this.usuario,
+            contrasena: this.contrasena 
+            }
+                     
             }
         ).then(function(respuesta){
 
