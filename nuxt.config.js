@@ -54,7 +54,7 @@ export default {
   },
   proxy: {
     '/api/': {
-      target: 'https://kinterviewbackmineria.herokuapp.com/mineria/',
+      target: 'https://mineriaproyecto.herokuapp.com',
   
       pathRewrite: {'^/api/': ''},
       changeOrigin: true
