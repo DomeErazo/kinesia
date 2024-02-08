@@ -276,9 +276,17 @@ export default {
       });
     },
     async obtenerListaEmpr() {
+      let listaEmpresas
       try {
-        const res = await this.$axios.get("/api/empresa");
-
+        const res = await this.$axios.get(
+          "https://mineriaproyecto.herokuapp.com/mineria/empresa",
+          {       
+        headers:{
+          Authorization: "Kinesia" + this.$cookies.get("ROLE_ADMIN")
+        }
+        });
+         
+console.log(res.data)
         const lis = res.data;
 
         lis.forEach((element) => {
