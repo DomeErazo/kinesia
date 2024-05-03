@@ -214,9 +214,9 @@ dialog:false,
         });
         this.dialog=false
       } else {
-        let Nempresa = this.$cookies.get("dataClient").empresa.nombreempresa;
+        let Nempresa = this.$cookies.get("dataClient").empresa;
         try {
-          const res = await this.$axios.post(`https://mineriaproyecto.herokuapp.com/mineria/insertPersona/1/4`, {
+          const res = await this.$axios.post("https://mineriaproyecto.herokuapp.com/mineria/insertPersona/${Nempresa}/4", {
             nombre: this.nombre,
             apellido: this.apellido,
             genero: this.genero,
@@ -230,10 +230,6 @@ dialog:false,
               usuario:null,
               contrasena: null,
               estado: true,
-              rolIdrol: {
-                id: "4",
-                rol: "post",
-              },
             },
           });
         

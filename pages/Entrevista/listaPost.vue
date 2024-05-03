@@ -307,6 +307,7 @@ export default {
     };
   },
   mounted() {
+    
     this.obtenerPost();
   },
   watch: {
@@ -337,12 +338,13 @@ export default {
       window.location.href = "/Entrevista/Entrevista";
     },
     async obtenerPost() {
+      
       let Npsic = this.$cookies.get("dataClient").nombre;
       let Apsic = this.$cookies.get("dataClient").apellido;
       //FALTA CAPTURAR EL NOMBRE DEL PSICOLOGO
 
       try {
-        const res = await axios.get(`/api/entrevistaLi/${Npsic + " "+Apsic}
+        const res = await axios.get(`https://mineriaproyecto.herokuapp.com/mineria/entrevistaLi/${Npsic + " "+Apsic}
         `);
         const lis = res.data;
       
