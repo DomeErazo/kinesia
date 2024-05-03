@@ -180,7 +180,7 @@ dialog:false,
     };
   },
   mounted() {
- console.log(this.$cookies.get("dataClient"));
+ console.log(this.$cookies.get("dataClient").empresa);
     
   },
   computed: {
