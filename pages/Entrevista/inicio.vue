@@ -180,7 +180,7 @@ dialog:false,
     };
   },
   mounted() {
- 
+ console.log("Hola");
     
   },
   computed: {
