@@ -216,7 +216,7 @@ dialog:false,
       } else {
         let Nempresa = this.$cookies.get("dataClient").persona.empresa.id;
         try {
-          const res = await this.$axios.post(`https://mineriaproyecto.herokuapp.com/mineria/insertPersona/${Nempresa}/4`, {
+          const res = await this.$axios.post(`/api/mineria/insertPersona/${Nempresa}/4`, {
             nombre: this.nombre,
             apellido: this.apellido,
             genero: this.genero,

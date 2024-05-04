@@ -101,7 +101,7 @@ export default {
     async enviar() {
       
       try {
-        const respuesta = await this.$axios.post("https://mineriaproyecto.herokuapp.com/mineria/login",
+        const respuesta = await this.$axios.post("/api/mineria/login",
         {
             usuario: this.usuario,
             contrasena: this.contrasena,
