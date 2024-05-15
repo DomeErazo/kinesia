@@ -341,7 +341,7 @@ export default {
       
       let Npsic = this.$cookies.get("dataClient").nombre;
       let Apsic = this.$cookies.get("dataClient").apellido;
-      //FALTA CAPTURAR EL NOMBRE DEL PSICOLOGO
+      //FALTA CAPTURAR EL NOMBRE DEL PSICOLOGO y probar
 
       try {
         const res = await axios.get(`/api/mineria/entrevistaLi/${Npsic + " "+Apsic}
