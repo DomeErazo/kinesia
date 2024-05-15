@@ -344,7 +344,7 @@ export default {
       //FALTA CAPTURAR EL NOMBRE DEL PSICOLOGO
 
       try {
-        const res = await axios.get(`https://mineriaproyecto.herokuapp.com/mineria/entrevistaLi/${Npsic + " "+Apsic}
+        const res = await axios.get(`/api/mineria/entrevistaLi/${Npsic + " "+Apsic}
         `);
         const lis = res.data;
       
