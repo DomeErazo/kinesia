@@ -217,6 +217,9 @@ dialog:false,
         let Nempresa = this.$cookies.get("dataClient").persona.empresa.id;
         try {
           const res = await this.$axios.post(`/api/mineria/insertPersona/${Nempresa}/4`, {
+            headers:{
+              Authorization:this.$cookies.get("ROLE_ADMIN")
+            },
             nombre: this.nombre,
             apellido: this.apellido,
             genero: this.genero,
