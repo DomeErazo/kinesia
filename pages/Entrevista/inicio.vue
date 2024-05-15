@@ -218,7 +218,7 @@ dialog:false,
         try {
           const res = await this.$axios.post(`/api/mineria/insertPersona/${Nempresa}/4`, {
             headers:{
-              Authorization:this.$cookies.get("ROLE_ADMIN")
+              Authorization:this.$cookies.get("dataClient").token;
             },
             nombre: this.nombre,
             apellido: this.apellido,
