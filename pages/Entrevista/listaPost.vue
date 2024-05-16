@@ -33,27 +33,27 @@
                         <v-row>
                           <v-col cols="12" sm="6" md="6">
                             <v-text-field
-                              v-model="editedItem.personaIdoersona.nombre"
+                              v-model="editedItem.personaIdpersona.nombre"
                               label="nombre"
                               :rules="[
                                 () =>
-                                  !!editedItem.personaIdoersona.nombre || 'Campo obligatorio',
+                                  !!editedItem.personaIdpersona.nombre || 'Campo obligatorio',
                               ]"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="6">
                             <v-text-field
-                              v-model="editedItem.personaIdoersona.apellido"
+                              v-model="editedItem.personaIdpersona.apellido"
                               label="apellido"
                               :rules="[
                                 () =>
-                                  !!editedItem.personaIdoersona.apellido || 'Campo obligatorio',
+                                  !!editedItem.personaIdpersona.apellido || 'Campo obligatorio',
                               ]"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="6">
                             <v-text-field
-                              v-model="editedItem.personaIdoersona.telefono"
+                              v-model="editedItem.personaIdpersona.telefono"
                               label="Teléfono"
                               :rules="[
                                 rules.tel,
@@ -66,7 +66,7 @@
                           </v-col>
                           <v-col cols="12" sm="6" md="6">
                             <v-text-field
-                              v-model="editedItem.personaIdoersona.cedula"
+                              v-model="editedItem.personaIdpersona.cedula"
                               :rules="[
                                 rules.ced,
                                 rules.counter,
@@ -83,16 +83,16 @@
                             <v-select
                               :items="generos"
                               label="Género"
-                              v-model="editedItem.personaIdoersona.genero"
+                              v-model="editedItem.personaIdpersona.genero"
                               :rules="[
                                 () =>
-                                  !!editedItem.personaIdoersona.genero || 'Campo obligatorio',
+                                  !!editedItem.personaIdpersona.genero || 'Campo obligatorio',
                               ]"
                             ></v-select>
                           </v-col>
                           <v-col cols="12" sm="6" md="6">
                             <v-text-field
-                              v-model="editedItem.personaIdoersona.correo"
+                              v-model="editedItem.personaIdpersona.correo"
                               label="Correo electrónico"
                               :rules="[rules.email, rules.required]"
                             ></v-text-field>
@@ -130,7 +130,7 @@
                         <v-col cols="10" style="margin-top: -25px">
                           <v-text-field
                             v-model="
-                              editedItem.personaIdoersona.empresa.nombreempresa
+                              editedItem.personaIdpersona.empresa.nombreempresa
                             "
                             disabled
                           />
@@ -142,12 +142,12 @@
                       <v-row>
                         <v-col cols="5">
                           <v-text-field
-                            v-model="editedItem.personaIdoersona.nombre"
+                            v-model="editedItem.personaIdpersona.nombre"
                             disabled
                           >
                           </v-text-field>
                           <v-text-field
-                            v-model="editedItem.personaIdoersona.genero"
+                            v-model="editedItem.personaIdpersona.genero"
                             disabled
                           >
                           </v-text-field>
@@ -231,29 +231,29 @@ export default {
       headers: [
         {
           text: "Nombres",
-          value: "personaIdoersona.nombre",
+          value: "personaIdpersona.nombre",
         },
         {
           text: "Apellidos",
-          value: "personaIdoersona.apellido",
+          value: "personaIdpersona.apellido",
         },
         {
           text: "Cédula",
-          value: "personaIdoersona.cedula",
+          value: "personaIdpersona.cedula",
           sortable: true,
         },
 
         {
           text: "Género",
-          value: "personaIdoersona.genero",
+          value: "personaIdpersona.genero",
         },
         {
           text: "Correo",
-          value: "personaIdoersona.correo",
+          value: "personaIdpersona.correo",
         },
         {
           text: "Teléfono",
-          value: "personaIdoersona.telefono",
+          value: "personaIdpersona.telefono",
         },
 
  
@@ -285,7 +285,7 @@ export default {
         cedula: "",
         genero: "",
         correo: "",
-        personaIdoersona: {
+        personaIdpersona: {
           empresa: {
             nombreempresa: "",
           },
@@ -298,7 +298,7 @@ export default {
         cedula: "",
         genero: "",
         correo: "",
-        personaIdoersona: {
+        personaIdpersona: {
           empresa: {
             nombreempresa: "",
           },
@@ -320,7 +320,7 @@ export default {
   },
   methods: {
     cambiar() {
-      if (this.editedItem.personaIdoersona.genero == "Femenino") {
+      if (this.editedItem.personaIdpersona.genero == "Femenino") {
         setTimeout(() => {
           let img = document.getElementById("img1");
        
@@ -339,14 +339,19 @@ export default {
     },
     async obtenerPost() {
       
-      let Npsic = this.$cookies.get("dataClient").nombre;
-      let Apsic = this.$cookies.get("dataClient").apellido;
+      let Npsic = this.$cookies.get("dataClient").persona.cedula;
       //FALTA CAPTURAR EL NOMBRE DEL PSICOLOGO
 
       try {
-        const res = await axios.get(`/api/mineria/entrevistaLi/${Npsic + " "+Apsic}
-        `);
+        const res = await axios.get(`/api/mineria/entrevistaLi/${Npsic}
+        `,{
+          headers:{
+            Authorization:`Bearer `+this.$cookies.get("dataClient").token
+          }
+        });
+        
         const lis = res.data;
+        console.log(res.data)
       
 
         this.desserts = res.data;
@@ -372,16 +377,16 @@ export default {
       try {
         const datos = {
           // 
-          nombre: this.editedItem.personaIdoersona.nombre,
-          apellido: this.editedItem.personaIdoersona.apellido,
-          telefono: this.editedItem.personaIdoersona.telefono,
+          nombre: this.editedItem.personaIdpersona.nombre,
+          apellido: this.editedItem.personaIdpersona.apellido,
+          telefono: this.editedItem.personaIdpersona.telefono,
           rol: "post",
-          cedula: this.editedItem.personaIdoersona.cedula,
-          genero: this.editedItem.personaIdoersona.genero,
-          correo: this.editedItem.personaIdoersona.correo,
+          cedula: this.editedItem.personaIdpersona.cedula,
+          genero: this.editedItem.personaIdpersona.genero,
+          correo: this.editedItem.personaIdpersona.correo,
         };
 
-        await this.$axios.put(`api/updatePersona/${this.editedItem.personaIdoersona.id}`, datos);
+        await this.$axios.put(`api/updatePersona/${this.editedItem.personaIdpersona.id}`, datos);
 
         this.obtenerPost();
         this.close();
@@ -404,8 +409,13 @@ export default {
       let idEnt = this.$cookies.get("dataClient").nombre;
       try {
         
-        const resp = await axios.get(`/api/informe/print/${this.editedItem.id}`);
-        window.open(`/api/informe/print/${this.editedItem.id}`);
+        const resp = await axios.get(`/api/mineria/informe/print/${this.editedItem.id}`,
+        {
+          headers:{
+            Authorization:`Bearer `+this.$cookies.get("dataClient").token
+          }
+        });
+        window.open(`/api/mineria/informe/print/${this.editedItem.id}`);
         
         this.close();
 

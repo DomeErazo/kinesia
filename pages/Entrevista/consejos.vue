@@ -174,14 +174,19 @@ export default {
       const fechaEntrevista=hoy;
 
       let ced = this.$cookies.get("postUs").cedula;
-      let entre = this.$cookies.get("dataClient").nombre;
-      let enteA = this.$cookies.get("dataClient").apellido;
+      let entre = this.$cookies.get("dataClient").persona.nombre;
       try {
-          const res = await this.$axios.post(`api/entrevistaPst?cedula=${ced}`, {
-        nombreEntrevistador: entre +" "+ enteA,
+          const res = await this.$axios.post(`api/mineria/entrevistaPst?cedula=${ced}`, {
+        nombreEntrevistador: entre,
         gestos: null,
         fechaEntrevista: fechaEntrevista,
-      });
+      },{
+        headers:{
+          Authorization:`Bearer `+this.$cookies.get("dataClient").token
+        }
+      }
+    
+      );
       this.$cookies.set('datoEnt', res.data)
       window.location.href = "/Entrevista/Entrevista";
       } catch (error) {

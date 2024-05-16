@@ -117,6 +117,7 @@ export default {
   async mounted() {
     await this.initModel();
     this.mostrarCamara();
+    console.log(this.$cookies.get("postUs"))
   },
   methods: {
     async initModel() {
@@ -128,12 +129,14 @@ export default {
     },
     
     async cargarEntrevista() {
-      let entre = this.$cookies.get("datoEnt").id;
-      const res = await axios.put(`/api/entrevistaGestos/${entre}`,
+      let entre = this.$cookies.get("postUs").id;
+      const res = await axios.put(`/api/mineria/entrevistaGestos/${entre}`,
       {
     resultados:this.resultados
-    
-    
+      },{
+        headers:{
+          Authorization:`Bearer `+this.$cookies.get("dataClient").token
+        }
       }
       );
        this.dialog = true;
@@ -213,9 +216,7 @@ export default {
         const class_names = [
           "aceptacion",
           "confianza",
-          "confundido",
           "inseguro",
-          "mentira",
           "nervioso",
           "verdad",
         ];
@@ -224,13 +225,9 @@ export default {
           this.resul = "aceptacion";
         } else if (mayorIndice == 1) {
           this.resul = "confianza";
-        } else if (mayorIndice == 2) {
-          this.resul = "confundido";
-        } else if (mayorIndice == 3) {
+        }  else if (mayorIndice == 3) {
           this.resul = "inseguro";
-        } else if (mayorIndice == 4) {
-          this.resul = "mentira";
-        } else if (mayorIndice == 5) {
+        }  else if (mayorIndice == 5) {
           this.resul = "nervioso";
         } else if (mayorIndice == 6) {
           this.resul = "verdad";
