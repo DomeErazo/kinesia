@@ -174,7 +174,7 @@ export default {
       const fechaEntrevista=hoy;
 
       let ced = this.$cookies.get("postUs").cedula;
-      let entre = this.$cookies.get("dataClient").persona.nombre;
+      let entre = dataClient.persona.nombre + " " + dataClient.persona.apellido;
       try {
           const res = await this.$axios.post(`api/mineria/entrevistaPst?cedula=${ced}`, {
         nombreEntrevistador: entre,

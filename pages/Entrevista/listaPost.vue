@@ -421,7 +421,7 @@ export default {
     const a = document.createElement('a');
     a.style.display = 'none'; // Aseguramos que el enlace no sea visible en la página
     a.href = url;
-    a.download = `informe_${this.editedItem.id}.pdf`; // Nombre del archivo para la descarga
+    a.download = `informe_${this.editedItem.personaIdpersona.nombre}.pdf`; // Nombre del archivo para la descarga
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a); // Removemos el enlace del DOM después de la descarga
