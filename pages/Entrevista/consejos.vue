@@ -173,6 +173,8 @@ export default {
 
       const fechaEntrevista=hoy;
 
+
+      let dataClient = this.$cookies.get("dataClient");
       let ced = this.$cookies.get("postUs").cedula;
       let entre = dataClient.persona.nombre + " " + dataClient.persona.apellido;
       try {
