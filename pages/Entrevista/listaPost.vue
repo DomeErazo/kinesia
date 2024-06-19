@@ -402,28 +402,37 @@ export default {
         this.close();
       }
     },
-    async resulta() {
-      this.dialogResult = true;
-    },
-    async resultadosPDF() {
-      let idEnt = this.$cookies.get("dataClient").nombre;
-      try {
-        
-        const resp = await axios.get(`/api/mineria/informe/print/${this.editedItem.id}`,
-        {
-          headers:{
-            Authorization:`Bearer `+this.$cookies.get("dataClient").token
-          }
-        });
-        window.open(`/api/mineria/informe/print/${this.editedItem.id}`);
-        
-        this.close();
-
-        this.closeDelete();
-      } catch (err) {
-      
-      }
-    },
+    resultadosPDF() {
+  let idEnt = this.$cookies.get("dataClient").nombre;
+  fetch(`/api/mineria/informe/print/${this.editedItem.id}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${this.$cookies.get("dataClient").token}`
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.blob();
+  })
+  .then(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none'; // Aseguramos que el enlace no sea visible en la página
+    a.href = url;
+    a.download = `informe_${this.editedItem.id}.pdf`; // Nombre del archivo para la descarga
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a); // Removemos el enlace del DOM después de la descarga
+    URL.revokeObjectURL(url); // Limpieza de la URL creada
+  })
+  .then(() => {
+    this.close();
+    this.closeDelete();
+  })
+  .catch(error => console.error('Error:', error));
+},
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
