@@ -351,7 +351,7 @@ export default {
         });
         
         const lis = res.data;
-        console.log(res.data)
+     
       
 
         this.desserts = res.data;

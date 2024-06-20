@@ -286,7 +286,7 @@ export default {
         }
         });
          
-console.log(res.data)
+
         const lis = res.data;
 
         lis.forEach((element) => {

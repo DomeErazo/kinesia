@@ -191,7 +191,7 @@ export default {
       );
       this.$cookies.set('datoEnt', res.data)
       window.location.href = "/Entrevista/Entrevista";
-      console.log(res.data)
+  
       } catch (error) {
         
       }

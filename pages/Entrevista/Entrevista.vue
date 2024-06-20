@@ -50,7 +50,7 @@
           <canvas id="otrocanvas" v-show="false" width="300" height="300">otrocanvas</canvas>
    
           <!--IMPRIMO EL RESULTADO -->
-          <div id="resul" style="font-size: 25px"></div>
+         <!-- <div id="resul" style="font-size: 25px"></div>-->
 
           <v-btn color="primary" @click="cargarEntrevista">Finalizar</v-btn>
         </v-card-text>
@@ -117,7 +117,7 @@ export default {
   async mounted() {
     await this.initModel();
     this.mostrarCamara();
-    console.log(this.$cookies.get("postUs"))
+    
   },
   methods: {
     async initModel() {
@@ -216,7 +216,7 @@ export default {
         const class_names = [
           "aceptacion",
           "confianza",
-          "inseguro",
+          "inseguridad",
           "nervioso",
           "verdad",
         ];
@@ -226,7 +226,7 @@ export default {
         } else if (mayorIndice == 1) {
           this.resul = "confianza";
         }  else if (mayorIndice == 3) {
-          this.resul = "inseguro";
+          this.resul = "inseguridad";
         }  else if (mayorIndice == 5) {
           this.resul = "nervioso";
         } else if (mayorIndice == 6) {

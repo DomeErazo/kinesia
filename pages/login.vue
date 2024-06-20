@@ -109,7 +109,7 @@ export default {
         
         );
 
-        console.log(respuesta.data)
+      
 
         let type = respuesta.data.rol;
         this.$store.commit("session/logIn", respuesta.data);
