@@ -50,7 +50,7 @@
           <canvas id="otrocanvas" v-show="false" width="300" height="300">otrocanvas</canvas>
    
           <!--IMPRIMO EL RESULTADO -->
-         <!-- <div id="resul" style="font-size: 25px"></div>-->
+       <div id="resul" style="font-size: 1px"></div>
 
           <v-btn color="primary" @click="cargarEntrevista">Finalizar</v-btn>
         </v-card-text>
