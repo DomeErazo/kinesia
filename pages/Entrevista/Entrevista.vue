@@ -129,7 +129,7 @@ export default {
     },
     
     async cargarEntrevista() {
-      let entre = this.$cookies.get("postUs").id;
+      let entre = this.$cookies.get("datoEnt").id;
       const res = await axios.put(`/api/mineria/entrevistaGestos/${entre}`,
       {
     resultados:this.resultados
