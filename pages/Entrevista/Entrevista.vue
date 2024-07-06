@@ -183,10 +183,11 @@ export default {
       if (this.modelo != null) {
         //REASIGNAMOS EL CANVAS A 300*300
         this.resamplesingle(this.canvas, 300, 300, this.otrocanvas);
-        setTimeout(this.predecir, 8000);
+        setTimeout(this.predecir, 2000);
 
         //Hacer la predicción
 
+     
         const ctx2 = this.otrocanvas.getContext("2d");
 
        
@@ -235,6 +236,7 @@ export default {
       }
 
       this.resultados.push(this.resul);
+      console.log(this.resul)
     
       //
     },
